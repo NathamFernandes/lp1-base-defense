@@ -16,3 +16,9 @@ diretório do projeto execute:
 make
 make run
 ```
+
+_Compilação atual Windows:_
+
+```
+g++ -I ./include .\src\main.cpp .\src\game.cpp .\src\model\shot.cpp .\src\model\enemy.cpp -o game.exe -lallegro -lallegro_font -lallegro_image -lallegro_primitives
+```
