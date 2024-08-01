@@ -32,6 +32,9 @@ bool Game::init()
     if (!must_init(al_install_keyboard(), "keyboard"))
         return false;
 
+    if (!must_init(al_install_mouse(), "mouse"))
+        return false;
+
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
 
@@ -54,16 +57,18 @@ bool Game::init()
     if (!must_init(this->font, "font"))
         return false;
 
-    al_register_event_source(this->queue, al_get_keyboard_event_source());
-
+    al_register_event_source(
+        this->queue, al_get_keyboard_event_source());
     al_register_event_source(
         this->queue, al_get_display_event_source(this->display));
     al_register_event_source(
         this->queue, al_get_timer_event_source(this->timer));
+    al_register_event_source(
+        this->queue, al_get_mouse_event_source());
 
     // Classes init
-    //
-    // this->player->player_init();
+    this->player = new Player();
+    must_init(this->player->init(), "player");
     // for (int i = 0; i < this->objAmount; i++) {
     // this->shots[i]->shots_init();
     // this->enemy[i]->enemy_init();
@@ -95,6 +100,26 @@ void Game::handleEvents()
     case ALLEGRO_EVENT_TIMER:
         this->redraw = true;
         break;
+    case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
+        switch (event.mouse.button)
+        {
+        case 1: // Botão esquerdo do mouse
+            cout << "PRIMEIRO!" << endl;
+            // Lógica para seguir o mouse até soltar
+            break;
+        case 2: // Botão direito do mouse
+            cout << "SEGUNDO!" << endl;
+            // Lógica para seguir o ponto clicado pelo mouse até chegar ou ser interrompido por outro evento
+            break;
+        default:
+            break;
+        }
+        // Esboços que podem ser úteis.
+        // this->mousePositionX = event.mouse.x;
+        // this->mousePositionY = event.mouse.y;
+        // player->setPositionX(event.mouse.x);
+        // player->setPositionY(event.mouse.y);
+        break;
     case ALLEGRO_EVENT_DISPLAY_CLOSE:
         this->running = false;
         break;
@@ -112,6 +137,7 @@ void Game::render()
             320, 240,
             ALLEGRO_ALIGN_CENTRE,
             "HELLO, WORLD!");
+        al_draw_filled_circle(player->getPositionX(), player->getPositionY(), 10, al_map_rgb_f(1, 0, 1));
         al_flip_display();
 
         this->redraw = false;

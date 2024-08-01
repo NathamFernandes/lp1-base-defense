@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <string>
+#include "player.h"
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -24,13 +25,17 @@ private:
     bool running, redraw;
     long score;
     unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
+    // Não sei se realmente necessários
+    int mousePositionX;
+    int mousePositionY;
+    //
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_TIMER *timer;
     ALLEGRO_FONT *font;
 
-    // Player player;
+    Player *player;
     // Enemy enemy[objAmount];
     // Shot shots[objAmount];
     // Base base;
