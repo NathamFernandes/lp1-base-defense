@@ -26,7 +26,7 @@ private:
     ALLEGRO_TIMER* timer;
     ALLEGRO_FONT* font;
 
-    Base base;
+    Base *base;
 
     bool must_init(bool test, string description);
     void handleEvents();

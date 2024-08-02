@@ -1,50 +1,44 @@
 #include "base.h"
 
-Base::Base()
+Base::Base(int displayWidth, int displayHeight)
 {
     this->width = 200;
     this->height = 180;
-    this->life = 10;
+    this->life = 100;
 
-    // 640: DISPLAY_WIDTH
-    // 480: DISPLAY_HEIGHT
-    // TODO: obter automaticamente os valores de DISPLAY_WIDTH e DISPLAY_HEIGHT
-    this->x1 = (640 / 2) - (this->width / 2);
-    this->y1 = (480 / 2) - (this->height / 2);
-    this->x2 = (640 / 2) + (this->width / 2);
-    this->y2 = (480 / 2) + (this->height / 2);
+    this->displayWidth = displayWidth;
+    this->displayHeight = displayHeight;
 
-    this->red = 0;
-    this->green = 255;
-    this->blue = 0;
+    this->x1 = (this->displayWidth / 2) - (this->width / 2);
+    this->y1 = (this->displayHeight / 2) - (this->height / 2);
+    this->x2 = (this->displayWidth / 2) + (this->width / 2);
+    this->y2 = (this->displayHeight / 2) + (this->height / 2);
+
+    this->setRGBColor(0, 255, 0);
 }
 
 void Base::update()
 {
-    this->red = 0;
-    this->green = 0;
-    this->blue = 0;
+    this->setRGBColor(0, 0, 0);
 
-    if (this->life >= 80) // green
-    {
-        this->green = 255;
-    }
-    else if (this->life >= 50) // orange
-    {
-        this->red = 255;
-        this->green = 165;
-    }
-    else if (this->life >= 20) // yellow
-    {
-        this->red = 255;
-        this->green = 255;
-    }
-    else // red
-    {
-        this->red = 255;
-    }
+    if (this->life >= 80)
+        this->setRGBColor(0, 255, 0); // green
+    else if (this->life >= 50)
+        this->setRGBColor(255, 165, 0); // orange
+    else if (this->life >= 20)
+        this->setRGBColor(255, 255, 0); // yellow
+    else
+        this->setRGBColor(255, 0, 0); // red
 }
 
-void Base::render() {
+void Base::render()
+{
     al_draw_rectangle(x1, y1, x2, y2, al_map_rgb(red, green, blue), 7);
+}
+
+void Base::setRGBColor(int r, int g, int b)
+{
+    this->red = r;
+    this->green = g;
+    this->blue = b;
 }

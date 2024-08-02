@@ -7,17 +7,19 @@
 class Base
 {
 public:
-    Base();
+    Base(int display_width, int display_height);
 
     void update();
     void render();
 private:
-    int width;
-    int height;
+    int displayWidth, displayHeight;
+    int width, height;
     int life;
 
     int x1, y1, x2, y2;
     int red, green, blue;
+
+    void setRGBColor(int r, int g, int b);
 };
 
 #endif // BASE_H

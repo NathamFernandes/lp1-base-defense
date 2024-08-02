@@ -7,6 +7,7 @@ using namespace std;
 Game::Game() {
     this->running = true;
     this->redraw = true;
+    this->base = new Base(640, 480);
 }
 
 Game::~Game() {
@@ -48,11 +49,13 @@ bool Game::init() {
     return true;
 }
 
-
 void Game::run() {
     while (running) {
         this->handleEvents();
         // Atualizar estado dos elementos
+
+        this->base->update();
+
         this->render();
     }
 }
@@ -64,7 +67,9 @@ void Game::handleEvents() {
     switch (event.type) {
         case ALLEGRO_EVENT_TIMER:
             // TODO: criar função para lidar com update dos elementos
-            this->base.update();
+            // this->update();
+            this->base->update();
+
             this->redraw = true;
             break;
         case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -76,14 +81,9 @@ void Game::handleEvents() {
 void Game::render() {
     if (this->redraw && al_event_queue_is_empty(this->queue)) {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        this->base.render();
-        // al_draw_text(
-        //     this->font,
-        //     al_map_rgb(0, 0, 0),
-        //     320, 240,
-        //     ALLEGRO_ALIGN_CENTRE,
-        //     "HELLO, WORLD!"
-        // );
+
+        this->base->render();
+
         al_flip_display();
 
         this->redraw = false;
@@ -95,4 +95,6 @@ void Game::deinit() {
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
+
+    delete this->base;
 }
