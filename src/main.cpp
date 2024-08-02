@@ -4,10 +4,12 @@
 
 using namespace std;
 
-int main() {
+int main()
+{
     Game game;
 
-    if (!game.init()) {
+    if (!game.init())
+    {
         cout << "Erro ao inicializar o jogo." << endl;
         return 1;
     }

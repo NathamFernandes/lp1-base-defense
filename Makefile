@@ -1,35 +1,35 @@
 NAME = game
 
 SRC_DIR = src
-OBJ_DIR = obj
 INCLUDE_DIR = include
+OBJ_DIR = obj
 BIN_DIR = bin
 
 CC = g++
-CFLAGS = -I$(INCLUDE_DIR) -pedantic -Wall -Wextra -ansi -std=c++11
-ALLEGROFLAGS = $(shell pkg-config allegro-5 allegro_font-5 --libs --cflags)
+CFLAGS = -I ./$(INCLUDE_DIR) -pedantic -Wall -Wextra -ansi -std=c++11
+ALLEGRO_FLAGS = -lallegro -lallegro_font -lallegro_image -lallegro_primitives
 
-EXECUTABLE = $(BIN_DIR)/$(NAME)
+EXE = $(BIN_DIR)/$(NAME)
 
-_DEPS = game.h
+_DEPS = game.h base.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = main.o game.o
+_OBJS = main.o game.o model/base.o
 OBJS = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 
-all: directories $(EXECUTABLE)
+all: directories $(EXE)
 
 directories:
-	mkdir -p $(BIN_DIR) $(OBJ_DIR)
+	mkdir -p $(BIN_DIR) $(OBJ_DIR) $(OBJ_DIR)/model
 
-$(EXECUTABLE): $(OBJS)
-	$(CC) -o $@ $^ $(CFLAGS) $(ALLEGROFLAGS)
+$(EXE): $(OBJS)
+	$(CC) -o $@ $^ $(ALLEGRO_FLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 run: all
-	./$(EXECUTABLE)
+	./$(EXE)
 
 .PHONY: clean
 

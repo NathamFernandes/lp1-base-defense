@@ -6,13 +6,18 @@ using namespace std;
 
 Game::Game()
 {
+    this->displayWidth = 640;
+    this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
+    this->base = new Base(this->displayWidth, this->displayHeight);
 }
 
 Game::~Game()
 {
     this->deinit();
+
+    delete this->base;
 }
 
 bool Game::must_init(bool test, string description)
@@ -49,12 +54,15 @@ bool Game::init()
     if (!must_init(this->queue, "queue"))
         return false;
 
-    this->display = al_create_display(640, 480);
+    this->display = al_create_display(this->displayWidth, this->displayHeight);
     if (!must_init(this->display, "display"))
         return false;
 
     this->font = al_create_builtin_font();
     if (!must_init(this->font, "font"))
+        return false;
+
+    if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
 
     al_register_event_source(
@@ -86,6 +94,9 @@ void Game::run()
     {
         this->handleEvents();
         // Atualizar estado dos elementos
+
+        this->base->update();
+
         this->render();
     }
 }
@@ -95,9 +106,14 @@ void Game::handleEvents()
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
+
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
+        // TODO: criar função para lidar com update dos elementos
+        // this->update();
+        this->base->update();
+
         this->redraw = true;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
@@ -138,6 +154,9 @@ void Game::render()
             ALLEGRO_ALIGN_CENTRE,
             "HELLO, WORLD!");
         al_draw_filled_circle(player->getPositionX(), player->getPositionY(), 10, al_map_rgb_f(1, 0, 1));
+
+        this->base->render();
+
         al_flip_display();
 
         this->redraw = false;

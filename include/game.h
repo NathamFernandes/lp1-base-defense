@@ -3,6 +3,7 @@
 
 #include <string>
 #include "player.h"
+#include "base.h"
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -22,6 +23,7 @@ public:
     void deinit();
 
 private:
+    int displayWidth, displayHeight;
     bool running, redraw;
     long score;
     unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
@@ -36,9 +38,10 @@ private:
     ALLEGRO_FONT *font;
 
     Player *player;
+    Base *base;
+
     // Enemy enemy[objAmount];
     // Shot shots[objAmount];
-    // Base base;
     // Boss boss;
 
     unsigned char key[ALLEGRO_KEY_MAX];
