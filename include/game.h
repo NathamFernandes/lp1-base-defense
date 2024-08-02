@@ -19,6 +19,7 @@ public:
     void run();
     void deinit();
 private:
+    int displayWidth, displayHeight;
     bool running, redraw;
 
     ALLEGRO_DISPLAY* display;

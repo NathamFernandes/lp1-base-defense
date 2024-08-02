@@ -5,13 +5,17 @@
 using namespace std;
 
 Game::Game() {
+    this->displayWidth = 640;
+    this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
-    this->base = new Base(640, 480);
+    this->base = new Base(this->displayWidth, this->displayHeight);
 }
 
 Game::~Game() {
     this->deinit();
+
+    delete this->base;
 }
 
 bool Game::must_init(bool test, string description) {
@@ -30,7 +34,7 @@ bool Game::init() {
     this->queue = al_create_event_queue();
     if (!must_init(this->queue, "queue")) return false;
 
-    this->display = al_create_display(640, 480);
+    this->display = al_create_display(this->displayWidth, this->displayHeight);
     if (!must_init(this->display, "display")) return false;
 
     this->font = al_create_builtin_font();
@@ -95,6 +99,4 @@ void Game::deinit() {
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
-
-    delete this->base;
 }
