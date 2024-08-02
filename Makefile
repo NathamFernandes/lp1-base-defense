@@ -7,14 +7,14 @@ BIN_DIR = bin
 
 CC = g++
 CFLAGS = -I$(INCLUDE_DIR) -pedantic -Wall -Wextra -ansi -std=c++11
-ALLEGROFLAGS = $(shell pkg-config allegro-5 allegro_font-5 --libs --cflags)
+ALLEGROFLAGS = $(shell pkg-config allegro-5 allegro_font-5 allegro_primitives-5 --libs --cflags)
 
 EXECUTABLE = $(BIN_DIR)/$(NAME)
 
-_DEPS = game.h
+_DEPS = game.h base.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = main.o game.o
+_OBJS = main.o game.o base.o
 OBJS = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 
 all: directories $(EXECUTABLE)

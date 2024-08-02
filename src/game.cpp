@@ -35,6 +35,8 @@ bool Game::init() {
     this->font = al_create_builtin_font();
     must_init(this->font, "font");
 
+    if (!must_init(al_init_primitives_addon(), "primitives")) return false;
+
     al_register_event_source(
         this->queue, al_get_display_event_source(this->display)
     );
@@ -61,6 +63,8 @@ void Game::handleEvents() {
     al_wait_for_event(queue, &event);
     switch (event.type) {
         case ALLEGRO_EVENT_TIMER:
+            // TODO: criar função para lidar com update dos elementos
+            this->base.update();
             this->redraw = true;
             break;
         case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -72,13 +76,14 @@ void Game::handleEvents() {
 void Game::render() {
     if (this->redraw && al_event_queue_is_empty(this->queue)) {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        al_draw_text(
-            this->font,
-            al_map_rgb(0, 0, 0),
-            320, 240,
-            ALLEGRO_ALIGN_CENTRE,
-            "HELLO, WORLD!"
-        );
+        this->base.render();
+        // al_draw_text(
+        //     this->font,
+        //     al_map_rgb(0, 0, 0),
+        //     320, 240,
+        //     ALLEGRO_ALIGN_CENTRE,
+        //     "HELLO, WORLD!"
+        // );
         al_flip_display();
 
         this->redraw = false;
