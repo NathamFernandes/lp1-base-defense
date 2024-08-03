@@ -96,9 +96,6 @@ void Game::run()
     while (running)
     {
         this->handleEvents();
-        // Atualizar estado dos elementos
-        this->base->update();
-
         this->render();
     }
 }
@@ -122,7 +119,9 @@ void Game::handleEvents()
             // this->pause = true;
         }
         if (key[ALLEGRO_KEY_Q])
-            cout << "Q pressionado!" << endl;
+        {
+            this->player->shot();
+        }
 
         // Não sei o que isso faz direito, mas faz com
         // que a tecla não fique "apertada" infinitamente

@@ -7,12 +7,14 @@ using namespace std;
 
 Player::Player()
 {
-    // Valores random.
-    this->x = 100;
-    this->y = 100;
+    // Valores não definitivos.
+    this->x = 320;
+    this->y = 240;
     this->dx = 0;
     this->dy = 0;
-    this->life = 5;
+    this->life = 100;
+    this->ammunition = 100;
+    this->shotDelay = 0;
 }
 
 Player::~Player()
@@ -29,13 +31,15 @@ void Player::update()
 {
     this->x += this->dx;
     this->y += this->dy;
+    if (this->shotDelay > 0)
+        this->shotDelay--;
 }
 void Player::render()
 {
     al_draw_filled_circle(this->x, this->y, 10, al_map_rgb_f(1, 0, 1));
 }
 
-// Movimentação
+// Mecânica
 
 bool Player::moveToDestination(int destinationX, int destinationY)
 {
@@ -68,6 +72,18 @@ void Player::checkIfPlayerIsAtDestination(int destinationX, int destinationY)
     // Se o player estiver se movimentando e chegar no range de destino, seta a velocidade dy como 0.
     if (this->y <= destinationY + 2 && this->y >= destinationY - 2)
         this->dy = 0;
+}
+
+void Player::shot()
+{
+    if (this->ammunition > 0 && this->shotDelay == 0)
+    {
+        this->ammunition--;
+        // Valor arbitrário
+        this->shotDelay = 20;
+
+        cout << "Pew pew! Agora voce tem: " << this->ammunition << endl;
+    }
 }
 
 // Getters and Setters
@@ -110,4 +126,24 @@ float Player::getDY()
 void Player::setDY(float dy)
 {
     this->dy = dy;
+}
+
+unsigned short Player::getAmmunition()
+{
+    return this->ammunition;
+}
+
+void Player::setAmmunition(unsigned short ammunition)
+{
+    this->ammunition = ammunition;
+}
+
+unsigned short Player::getShotDelay()
+{
+    return this->shotDelay;
+}
+
+void Player::setShotDelay(unsigned short shotDelay)
+{
+    this->shotDelay = shotDelay;
 }

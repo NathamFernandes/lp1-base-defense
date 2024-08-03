@@ -9,6 +9,7 @@ class Player
 private:
     float x, y, dx, dy;
     short life;
+    unsigned short ammunition, shotDelay;
 
 public:
     Player();
@@ -19,10 +20,28 @@ public:
     void render();
     // void deinit();
 
+    // Mecânica
+
+    /**
+     * Move o Player para o destino do clique.
+     *
+     * @return true, caso a operação seja concluída.
+     * @return false, caso o player já esteja no local.
+     */
     bool moveToDestination(int destinationX, int destinationY);
+
+    /**
+     * Caso o Player estiver no destino, seta DX e DY como 0.
+     */
     void checkIfPlayerIsAtDestination(int destinationX, int destinationY);
 
+    /**
+     * Lida com os valores da munição e do delay entre os tiros.
+     */
+    void shot();
+
     // Getters and Setters
+
     float getPositionX();
     void setPositionX(float x);
 
@@ -34,6 +53,12 @@ public:
 
     float getDY();
     void setDY(float dy);
+
+    unsigned short getAmmunition();
+    void setAmmunition(unsigned short ammunition);
+
+    unsigned short getShotDelay();
+    void setShotDelay(unsigned short shotDelay);
 };
 
 #endif
