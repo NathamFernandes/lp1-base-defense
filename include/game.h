@@ -2,13 +2,16 @@
 #define GAME_H
 
 #include <string>
-#include "player.h"
-#include "base.h"
+#include <vector>
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
+
+#include "player.h"
+#include "base.h"
+#include "enemy.h"
 
 using namespace std;
 
@@ -26,7 +29,7 @@ private:
     int displayWidth, displayHeight;
     bool running, redraw;
     long score;
-    unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
+    int objAmount; // Parecido com #define SHOTS_N. esboço.
     // Não sei se realmente necessários
     int mousePositionX;
     int mousePositionY;
@@ -39,8 +42,8 @@ private:
 
     Player *player;
     Base *base;
+    vector<Enemy*> enemies;
 
-    // Enemy enemy[objAmount];
     // Shot shots[objAmount];
     // Boss boss;
 

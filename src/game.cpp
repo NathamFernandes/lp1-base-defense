@@ -10,7 +10,15 @@ Game::Game()
     this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
+    this->objAmount = 2; // TODO: ajustar quantidade e criar quota
+
     this->base = new Base(this->displayWidth, this->displayHeight);
+
+    this->enemies.resize(objAmount);
+    for (int i = 0; i < this->objAmount; i++)
+    {
+        this->enemies[i] = new Enemy();
+    }
 }
 
 Game::~Game()
@@ -18,6 +26,12 @@ Game::~Game()
     this->deinit();
 
     delete this->base;
+    delete this->player;
+
+    for (auto enemy : this->enemies)
+    {
+        delete enemy;
+    }
 }
 
 bool Game::must_init(bool test, string description)
@@ -39,6 +53,10 @@ bool Game::init()
 
     if (!must_init(al_install_mouse(), "mouse"))
         return false;
+
+    // Antialiasing
+    al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
+    al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
@@ -77,12 +95,6 @@ bool Game::init()
     // Classes init
     this->player = new Player();
     must_init(this->player->init(), "player");
-    // for (int i = 0; i < this->objAmount; i++) {
-    // this->shots[i]->shots_init();
-    // this->enemy[i]->enemy_init();
-    // }
-    // this->base->base_init();
-    // this->boss->boss_init() ??
 
     al_start_timer(this->timer);
     return true;
@@ -93,10 +105,6 @@ void Game::run()
     while (running)
     {
         this->handleEvents();
-        // Atualizar estado dos elementos
-
-        this->base->update();
-
         this->render();
     }
 }
@@ -112,7 +120,13 @@ void Game::handleEvents()
     case ALLEGRO_EVENT_TIMER:
         // TODO: criar função para lidar com update dos elementos
         // this->update();
+
         this->base->update();
+
+        for (auto enemy : enemies)
+        {
+            enemy->update();
+        }
 
         this->redraw = true;
         break;
@@ -147,15 +161,14 @@ void Game::render()
     if (this->redraw && al_event_queue_is_empty(this->queue))
     {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        al_draw_text(
-            this->font,
-            al_map_rgb(0, 0, 0),
-            320, 240,
-            ALLEGRO_ALIGN_CENTRE,
-            "HELLO, WORLD!");
         al_draw_filled_circle(player->getPositionX(), player->getPositionY(), 10, al_map_rgb_f(1, 0, 1));
 
         this->base->render();
+
+        for (auto enemy : enemies)
+        {
+            enemy->render();
+        }
 
         al_flip_display();
 
