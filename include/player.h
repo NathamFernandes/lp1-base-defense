@@ -59,6 +59,9 @@ public:
 
     unsigned short getShotDelay();
     void setShotDelay(unsigned short shotDelay);
+
+    short getLife();
+    void setLife(short life);
 };
 
 #endif

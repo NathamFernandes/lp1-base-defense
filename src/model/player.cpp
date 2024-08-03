@@ -80,7 +80,7 @@ void Player::shot()
     {
         this->ammunition--;
         // Valor arbitrário
-        this->shotDelay = 20;
+        this->shotDelay = 10;
 
         cout << "Pew pew! Agora voce tem: " << this->ammunition << endl;
     }
@@ -146,4 +146,13 @@ unsigned short Player::getShotDelay()
 void Player::setShotDelay(unsigned short shotDelay)
 {
     this->shotDelay = shotDelay;
+}
+
+short Player::getLife()
+{
+    return this->life;
+}
+void Player::setLife(short life)
+{
+    this->life = life;
 }

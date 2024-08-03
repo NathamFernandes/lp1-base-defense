@@ -179,7 +179,7 @@ void Game::render()
             320, 240,
             ALLEGRO_ALIGN_CENTRE,
             "HELLO, WORLD!");
-
+        this->renderScoreboard();
         this->player->render();
         this->base->render();
 
@@ -195,4 +195,22 @@ void Game::deinit()
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
+}
+
+// Aux
+
+void Game::renderScoreboard()
+{
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        60, 20,
+        ALLEGRO_ALIGN_CENTRE,
+        "Munição: %d", this->player->getAmmunition());
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        60, 50,
+        ALLEGRO_ALIGN_CENTRE,
+        "Vida: %d", this->player->getLife());
 }

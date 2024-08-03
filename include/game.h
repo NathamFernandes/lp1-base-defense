@@ -49,6 +49,7 @@ private:
     bool must_init(bool test, string description);
     void handleEvents();
     void render();
+    void renderScoreboard();
 
     // void keyboard_init();
     // void keyboard_update(ALLEGRO_EVENT *event);
