@@ -1,6 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_color.h>
+
 class Player
 {
 private:
@@ -12,14 +15,22 @@ public:
     ~Player();
 
     bool init();
+    void update();
+    void render();
     // void deinit();
 
     // Getters and Setters
-    int getPositionX();
-    void setPositionX(int x);
+    float getPositionX();
+    void setPositionX(float x);
 
-    int getPositionY();
-    void setPositionY(int y);
+    float getPositionY();
+    void setPositionY(float y);
+
+    float getDX();
+    void setDX(float dx);
+
+    float getDY();
+    void setDY(float dy);
 };
 
 #endif

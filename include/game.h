@@ -26,11 +26,9 @@ private:
     int displayWidth, displayHeight;
     bool running, redraw;
     long score;
-    unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
-    // Não sei se realmente necessários
-    int mousePositionX;
-    int mousePositionY;
-    //
+    int destinationX, destinationY;
+    bool isLeftButtonPressed;
+    // unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
@@ -42,7 +40,7 @@ private:
 
     // Enemy enemy[objAmount];
     // Shot shots[objAmount];
-    // Boss boss;
+    // Drop drops[objAmount];
 
     unsigned char key[ALLEGRO_KEY_MAX];
 
