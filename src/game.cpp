@@ -13,11 +13,13 @@ Game::Game()
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
-    /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+    /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
     this->player = new Player();
     this->base = new Base(this->displayWidth, this->displayHeight);
+
+    memset(this->key, 0, sizeof(this->key));
     // this->shots[i]->shots_init();
     // this->enemy[i]->enemy_init();
     // this->drops[i]->olollo;
@@ -112,42 +114,31 @@ void Game::handleEvents()
     case ALLEGRO_EVENT_TIMER:
         // TODO: criar função para lidar com update dos elementos
         // this->update();
-        this->base->update();
-        this->player->update();
 
-        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
-        // if (this->isLeftButtonPressed)
-        // {
+        if (key[ALLEGRO_KEY_ESCAPE])
+        {
+            this->running = false;
+            // TODO: feature opcional de pause
+            // this->pause = true;
+        }
+        if (key[ALLEGRO_KEY_Q])
+            cout << "Q pressionado!" << endl;
 
-        //     ALLEGRO_MOUSE_STATE state;
-
-        //     al_get_mouse_state(&state);
-
-        //     if (state.buttons & 1)
-        //     {
-        //         /* Primary (e.g. left) mouse button is held. */
-        //         // cout << state.x << " " << state.y << endl;
-
-        //         if (!this->player->moveToDestination(state.x, state.y))
-        //             break;
-        //     }
-        // }
+        // Não sei o que isso faz direito, mas faz com
+        // que a tecla não fique "apertada" infinitamente
+        for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
+            key[i] &= KEY_SEEN;
 
         this->player->checkIfPlayerIsAtDestination(this->destinationX, this->destinationY);
+
+        this->base->update();
+        this->player->update();
 
         this->redraw = true;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
         {
-        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
-        // case 1: // Botão esquerdo do mouse
-        //     cout << "Apertou o botão esquerdo do Mouse!" << endl;
-        //     this->isLeftButtonPressed = true;
-
-        //     if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
-        //         break;
-        //     break;
         case 2: // Botão direito do mouse
         {
             cout << "Apertou o botão direito do Mouse!" << endl;
@@ -164,24 +155,12 @@ void Game::handleEvents()
         }
 
         break;
-        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
-        // case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-        //     switch (event.mouse.button)
-        //     {
-        //     case 1:
-        //         cout << "Soltou o botão esquerdo do Mouse!" << endl;
-        //         this->isLeftButtonPressed = false;
 
-        //         this->player->setDX(0);
-        //         this->player->setDY(0);
-
-        //         break;
-
-        //     default:
-
-        //         break;
-        //     }
-
+    case ALLEGRO_EVENT_KEY_DOWN:
+        this->key[event.keyboard.keycode] = KEY_SEEN | KEY_RELEASED;
+        break;
+    case ALLEGRO_EVENT_KEY_UP:
+        this->key[event.keyboard.keycode] &= KEY_RELEASED;
         break;
 
     case ALLEGRO_EVENT_DISPLAY_CLOSE:

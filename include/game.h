@@ -10,6 +10,9 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 
+#define KEY_SEEN 1
+#define KEY_RELEASED 2
+
 using namespace std;
 
 class Game
@@ -27,10 +30,8 @@ private:
     bool running, redraw;
     long score;
     int destinationX, destinationY;
-    /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+    /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // bool isLeftButtonPressed;
-
-    // unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
@@ -39,10 +40,9 @@ private:
 
     Player *player;
     Base *base;
-
-    // Enemy enemy[objAmount];
-    // Shot shots[objAmount];
-    // Drop drops[objAmount];
+    // Enemy enemy[120];
+    // Shot shots[120];
+    // Drop drops[120];
 
     unsigned char key[ALLEGRO_KEY_MAX];
 
