@@ -19,6 +19,9 @@ public:
     void render();
     // void deinit();
 
+    bool moveToDestination(int destinationX, int destinationY);
+    void checkIfPlayerIsAtDestination(int destinationX, int destinationY);
+
     // Getters and Setters
     float getPositionX();
     void setPositionX(float x);

@@ -27,7 +27,9 @@ private:
     bool running, redraw;
     long score;
     int destinationX, destinationY;
-    bool isLeftButtonPressed;
+    /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+    // bool isLeftButtonPressed;
+
     // unsigned int objAmount = 128; // Parecido com #define SHOTS_N. esboço.
 
     ALLEGRO_DISPLAY *display;

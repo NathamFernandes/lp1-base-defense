@@ -13,7 +13,8 @@ Game::Game()
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
-    this->isLeftButtonPressed = false;
+    /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+    // this->isLeftButtonPressed = false;
 
     this->player = new Player();
     this->base = new Base(this->displayWidth, this->displayHeight);
@@ -114,43 +115,45 @@ void Game::handleEvents()
         this->base->update();
         this->player->update();
 
-        // Se o player estiver se movimentando e chegar no range de destino, seta a velocidade dx como 0.
-        if (this->player->getPositionX() <= this->destinationX + 2 && this->player->getPositionX() >= this->destinationX - 2)
-            this->player->setDX(0);
+        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+        // if (this->isLeftButtonPressed)
+        // {
 
-        // Se o player estiver se movimentando e chegar no range de destino, seta a velocidade dy como 0.
-        if (this->player->getPositionY() <= this->destinationY + 2 && this->player->getPositionY() >= this->destinationY - 2)
-            this->player->setDY(0);
+        //     ALLEGRO_MOUSE_STATE state;
+
+        //     al_get_mouse_state(&state);
+
+        //     if (state.buttons & 1)
+        //     {
+        //         /* Primary (e.g. left) mouse button is held. */
+        //         // cout << state.x << " " << state.y << endl;
+
+        //         if (!this->player->moveToDestination(state.x, state.y))
+        //             break;
+        //     }
+        // }
+
+        this->player->checkIfPlayerIsAtDestination(this->destinationX, this->destinationY);
 
         this->redraw = true;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
         {
-        case 1: // Botão esquerdo do mouse
-            cout << "Apertou o botão esquerdo do Mouse!" << endl;
-            this->isLeftButtonPressed = true;
-            // Lógica para seguir o mouse até soltar
-            break;
+        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+        // case 1: // Botão esquerdo do mouse
+        //     cout << "Apertou o botão esquerdo do Mouse!" << endl;
+        //     this->isLeftButtonPressed = true;
+
+        //     if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
+        //         break;
+        //     break;
         case 2: // Botão direito do mouse
         {
             cout << "Apertou o botão direito do Mouse!" << endl;
-            int percursoX = event.mouse.x - this->player->getPositionX();
-            int percursoY = event.mouse.y - this->player->getPositionY();
 
-            // Caso já esteja no mesmo lugar do clique, não continua a execução
-            if (abs(percursoX) <= 3 && abs(percursoY) <= 3)
+            if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
                 break;
-
-            float hipotenusa = sqrt((percursoX * percursoX) + (percursoY * percursoY));
-
-            float tempo = hipotenusa / 3;
-
-            float velocidadeX = percursoX / tempo;
-            float velocidadeY = percursoY / tempo;
-
-            this->player->setDX(velocidadeX);
-            this->player->setDY(velocidadeY);
 
             this->destinationX = event.mouse.x;
             this->destinationY = event.mouse.y;
@@ -161,20 +164,23 @@ void Game::handleEvents()
         }
 
         break;
+        /** Lógica botão esquerdo - feature opicional - não tá funcionando */
+        // case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
+        //     switch (event.mouse.button)
+        //     {
+        //     case 1:
+        //         cout << "Soltou o botão esquerdo do Mouse!" << endl;
+        //         this->isLeftButtonPressed = false;
 
-    case ALLEGRO_EVENT_MOUSE_BUTTON_UP:
-        switch (event.mouse.button)
-        {
-        case 1:
-            cout << "Soltou o botão esquerdo do Mouse!" << endl;
-            this->isLeftButtonPressed = false;
+        //         this->player->setDX(0);
+        //         this->player->setDY(0);
 
-            break;
+        //         break;
 
-        default:
+        //     default:
 
-            break;
-        }
+        //         break;
+        //     }
 
         break;
 
