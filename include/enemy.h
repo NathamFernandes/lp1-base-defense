@@ -6,6 +6,7 @@
 #include <allegro5/allegro_primitives.h>
 
 #include "random.h"
+#include "constants.h"
 
 enum Direction
 {

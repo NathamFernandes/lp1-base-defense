@@ -4,10 +4,12 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_color.h>
 
+#include "constants.h"
+
 class Base
 {
 public:
-    Base(int display_width, int display_height);
+    Base();
 
     void update();
     void render();
@@ -18,7 +20,6 @@ public:
     void setLife(int life);
 
 private:
-    int displayWidth, displayHeight;
     int width, height;
     int life;
 

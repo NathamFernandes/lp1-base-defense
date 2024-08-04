@@ -30,13 +30,12 @@ public:
     void update();
 
 private:
-    int displayWidth, displayHeight;
     bool running, redraw;
     long score;
     int destinationX, destinationY;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // bool isLeftButtonPressed;
-    int objAmount; // Parecido com #define SHOTS_N. esboço.
+    int objAmount; // Parecido com #define SHOTS_N. esboço. 
     int frames;
     int quota;
 

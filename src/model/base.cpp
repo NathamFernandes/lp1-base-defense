@@ -1,18 +1,15 @@
 #include "base.h"
 
-Base::Base(int displayWidth, int displayHeight)
+Base::Base()
 {
-    this->width = 200;
-    this->height = 180;
-    this->life = 100;
+    this->width = BASE_WIDTH;
+    this->height = BASE_HEIGHT;
+    this->life = BASE_LIFE;
 
-    this->displayWidth = displayWidth;
-    this->displayHeight = displayHeight;
-
-    this->x1 = (this->displayWidth / 2) - (this->width / 2);
-    this->y1 = (this->displayHeight / 2) - (this->height / 2);
-    this->x2 = (this->displayWidth / 2) + (this->width / 2);
-    this->y2 = (this->displayHeight / 2) + (this->height / 2);
+    this->x1 = (DISPLAY_WIDTH - this->width) / 2;
+    this->y1 = (DISPLAY_HEIGHT - this->height) / 2;
+    this->x2 = (DISPLAY_WIDTH + this->width) / 2;
+    this->y2 = (DISPLAY_HEIGHT + this->height) / 2;
 
     this->setRGBColor(0, 255, 0);
 }
@@ -33,7 +30,10 @@ void Base::update()
 
 void Base::render()
 {
-    al_draw_rectangle(x1, y1, x2, y2, al_map_rgb(red, green, blue), 7);
+    al_draw_rectangle(
+        x1, y1, x2, y2,
+        al_map_rgb(red, green, blue),
+        BASE_THICKNESS);
 }
 
 void Base::setRGBColor(int r, int g, int b)

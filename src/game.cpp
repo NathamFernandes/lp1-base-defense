@@ -8,8 +8,6 @@ using namespace std;
 Game::Game()
 {
     memset(this->key, 0, sizeof(this->key));
-    this->displayWidth = 640;
-    this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
     this->destinationX = 0;
@@ -21,7 +19,7 @@ Game::Game()
     // this->isLeftButtonPressed = false;
 
     this->player = new Player();
-    this->base = new Base(this->displayWidth, this->displayHeight);
+    this->base = new Base();
 
     this->enemies.resize(objAmount);
     for (int i = 0; i < this->objAmount; i++)
@@ -83,7 +81,7 @@ bool Game::init()
     if (!must_init(this->queue, "queue"))
         return false;
 
-    this->display = al_create_display(this->displayWidth, this->displayHeight);
+    this->display = al_create_display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     if (!must_init(this->display, "display"))
         return false;
 
