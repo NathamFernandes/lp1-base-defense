@@ -12,6 +12,16 @@ Enemy::Enemy()
     this->calculateVelocity();
 }
 
+bool Enemy::isUsed()
+{
+    return this->used;
+}
+
+void Enemy::setUsed(bool used)
+{
+    this->used = used;
+}
+
 void Enemy::defineRandomPosition()
 {
     this->direction = (Direction) Random::randint(0, LAST);
@@ -84,13 +94,6 @@ void Enemy::render()
 
 void Enemy::update()
 {
-    if (!this->used)
-    {
-        this->defineRandomPosition();
-        this->calculateVelocity();
-        this->used = true;
-    }
-
     if (this->life <= 0)
     {
         this->used = false;
@@ -106,4 +109,11 @@ void Enemy::update()
 
     this->x += this->dx;
     this->y += this->dy;
+
+    // if (!this->used)
+    // {
+    //     this->defineRandomPosition();
+    //     this->calculateVelocity();
+    //     this->used = true;
+    // }
 }

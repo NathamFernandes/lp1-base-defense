@@ -24,6 +24,7 @@ public:
     bool init();
     void run();
     void deinit();
+    void update();
 
 private:
     int displayWidth, displayHeight;
@@ -33,7 +34,9 @@ private:
     // Não sei se realmente necessários
     int mousePositionX;
     int mousePositionY;
-    //
+
+    int frames;
+    int quota;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;

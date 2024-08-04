@@ -10,7 +10,9 @@ Game::Game()
     this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
-    this->objAmount = 2; // TODO: ajustar quantidade e criar quota
+    this->objAmount = 30; // TODO: ajustar quantidade e criar quota
+    this->frames = 0;
+    this->quota = 0;
 
     this->base = new Base(this->displayWidth, this->displayHeight);
 
@@ -109,26 +111,38 @@ void Game::run()
     }
 }
 
+void Game::update()
+{
+    this->base->update();
+
+    // if (this->quota == 0) this->quota = Random::randint(1, 4);
+    if (this->quota == 0 && !(this->frames % 80))
+        this->quota = Random::randint(1, 6); // [1, 6)
+    for (auto enemy : enemies)
+    {
+        if (!enemy->isUsed() && this->quota > 0)
+        {
+            enemy->setUsed(true);
+            enemy->defineRandomPosition();
+            enemy->calculateVelocity();
+            this->quota--;
+        }
+
+        if (enemy->isUsed()) enemy->update();
+    }
+}
+
 void Game::handleEvents()
 {
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
-
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
-        // TODO: criar função para lidar com update dos elementos
-        // this->update();
-
-        this->base->update();
-
-        for (auto enemy : enemies)
-        {
-            enemy->update();
-        }
-
+        this->update();
         this->redraw = true;
+        this->frames++;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
@@ -167,7 +181,8 @@ void Game::render()
 
         for (auto enemy : enemies)
         {
-            enemy->render();
+            if (enemy->isUsed())
+                enemy->render();
         }
 
         al_flip_display();

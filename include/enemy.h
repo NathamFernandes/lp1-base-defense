@@ -23,13 +23,17 @@ public:
     void render();
     void update();
 
-    // bool init();
-    // void deinit();
+    bool isUsed();
+    void setUsed(bool used);
 
     int getPositionX();
     void setPositionX(int x);
+
     int getPositionY();
     void setPositionY(int y);
+
+    void defineRandomPosition();
+    void calculateVelocity();
 
 private:
     float x, y;
@@ -37,9 +41,6 @@ private:
     int life;
     bool used;
     Direction direction;
-
-    void defineRandomPosition();
-    void calculateVelocity();
 };
 
 #endif
