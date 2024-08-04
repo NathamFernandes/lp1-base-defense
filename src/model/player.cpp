@@ -36,7 +36,7 @@ void Player::update()
 }
 void Player::render()
 {
-    al_draw_filled_circle(this->x, this->y, 10, al_map_rgb_f(1, 0, 1));
+    al_draw_filled_circle(this->x, this->y, 13, al_map_rgb_f(1, 0, 1));
 }
 
 // Mecânica
@@ -81,8 +81,6 @@ void Player::shot()
         this->ammunition--;
         // Valor arbitrário
         this->shotDelay = 10;
-
-        cout << "Pew pew! Agora voce tem: " << this->ammunition << endl;
     }
 }
 

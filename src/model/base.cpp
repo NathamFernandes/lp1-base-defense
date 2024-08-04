@@ -42,3 +42,13 @@ void Base::setRGBColor(int r, int g, int b)
     this->green = g;
     this->blue = b;
 }
+
+int Base::getLife()
+{
+    return this->life;
+}
+
+void Base::setLife(int life)
+{
+    this->life = life;
+}

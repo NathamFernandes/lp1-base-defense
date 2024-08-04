@@ -24,7 +24,7 @@ void Enemy::setUsed(bool used)
 
 void Enemy::defineRandomPosition()
 {
-    this->direction = (Direction) Random::randint(0, LAST);
+    this->direction = (Direction)Random::randint(0, LAST);
     int xValue = Random::randint(0, 640);
     int yValue = Random::randint(0, 480);
 
@@ -58,7 +58,7 @@ void Enemy::calculateVelocity()
 
     float hypot = sqrt(pow(percursoX, 2) + pow(percursoY, 2));
 
-    float time = hypot / 3;
+    float time = hypot;
 
     float xVelocity = percursoX / time;
     float yVelocity = percursoY / time;
@@ -89,7 +89,7 @@ void Enemy::setPositionY(int y)
 
 void Enemy::render()
 {
-    al_draw_filled_circle(this->x, this->y, 7, al_map_rgb(255, 0, 0));
+    al_draw_filled_circle(this->x, this->y, 9, al_map_rgb(255, 0, 0));
 }
 
 void Enemy::update()
@@ -101,8 +101,7 @@ void Enemy::update()
 
     if (
         !((this->y < 480 && this->y > 330) || (this->y > 0 && this->y < 150)) &&
-        !((this->x > 0 && this->x < 220) || (this->x > 420 && this->x < 640))
-    )
+        !((this->x > 0 && this->x < 220) || (this->x > 420 && this->x < 640)))
     {
         this->used = false;
     }

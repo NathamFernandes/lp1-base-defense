@@ -38,7 +38,6 @@ Game::~Game()
 
     delete this->player;
     delete this->base;
-    delete this->player;
 
     for (auto enemy : this->enemies)
     {
@@ -157,8 +156,7 @@ void Game::handleEvents()
         if (key[ALLEGRO_KEY_Q])
             this->player->shot();
 
-        // Não sei o que isso faz direito, mas faz com
-        // que a tecla não fique "apertada" infinitamente
+        // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
@@ -173,8 +171,6 @@ void Game::handleEvents()
         {
         case 2: // Botão direito do mouse
         {
-            cout << "Apertou o botão direito do Mouse!" << endl;
-
             if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
                 break;
 
@@ -243,13 +239,19 @@ void Game::renderScoreboard()
     al_draw_textf(
         this->font,
         al_map_rgb(0, 0, 0),
-        60, 20,
-        ALLEGRO_ALIGN_CENTRE,
+        40, 20,
+        ALLEGRO_ALIGN_LEFT,
         "Munição: %d", this->player->getAmmunition());
     al_draw_textf(
         this->font,
         al_map_rgb(0, 0, 0),
-        60, 50,
-        ALLEGRO_ALIGN_CENTRE,
-        "Vida: %d", this->player->getLife());
+        40, 50,
+        ALLEGRO_ALIGN_LEFT,
+        "Vida do Herói: %d", this->player->getLife());
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        40, 80,
+        ALLEGRO_ALIGN_LEFT,
+        "Vida da base: %d", this->base->getLife());
 }

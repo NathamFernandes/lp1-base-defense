@@ -11,6 +11,12 @@ public:
 
     void update();
     void render();
+
+    // Getters and Setters
+
+    int getLife();
+    void setLife(int life);
+
 private:
     int displayWidth, displayHeight;
     int width, height;
