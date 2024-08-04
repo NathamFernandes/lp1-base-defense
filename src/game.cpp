@@ -7,22 +7,29 @@ using namespace std;
 
 Game::Game()
 {
+    memset(this->key, 0, sizeof(this->key));
     this->displayWidth = 640;
     this->displayHeight = 480;
     this->running = true;
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
+    this->objAmount = 30; // TODO: ajustar quantidade e criar quota
+    this->frames = 0;
+    this->quota = 0;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
     this->player = new Player();
     this->base = new Base(this->displayWidth, this->displayHeight);
 
-    memset(this->key, 0, sizeof(this->key));
-    // this->shots[i]->shots_init();
-    // this->enemy[i]->enemy_init();
-    // this->drops[i]->olollo;
+    this->enemies.resize(objAmount);
+    for (int i = 0; i < this->objAmount; i++)
+    {
+        // this->shots[i]->shots_init();
+        // this->drops[i]->olollo;
+        this->enemies[i] = new Enemy();
+    }
 }
 
 Game::~Game()
@@ -31,6 +38,12 @@ Game::~Game()
 
     delete this->player;
     delete this->base;
+    delete this->player;
+
+    for (auto enemy : this->enemies)
+    {
+        delete enemy;
+    }
 }
 
 bool Game::must_init(bool test, string description)
@@ -52,6 +65,10 @@ bool Game::init()
 
     if (!must_init(al_install_mouse(), "mouse"))
         return false;
+
+    // Antialiasing
+    al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
+    al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
 
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
@@ -100,18 +117,37 @@ void Game::run()
     }
 }
 
+void Game::update()
+{
+    this->player->update();
+    this->base->update();
+
+    // if (this->quota == 0) this->quota = Random::randint(1, 4);
+    if (this->quota == 0 && !(this->frames % 80))
+        this->quota = Random::randint(1, 6); // [1, 6)
+    for (auto enemy : enemies)
+    {
+        if (!enemy->isUsed() && this->quota > 0)
+        {
+            enemy->setUsed(true);
+            enemy->defineRandomPosition();
+            enemy->calculateVelocity();
+            this->quota--;
+        }
+
+        if (enemy->isUsed())
+            enemy->update();
+    }
+}
+
 void Game::handleEvents()
 {
     ALLEGRO_EVENT event;
 
     al_wait_for_event(queue, &event);
-
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
-        // TODO: criar função para lidar com update dos elementos
-        // this->update();
-
         if (key[ALLEGRO_KEY_ESCAPE])
         {
             this->running = false;
@@ -119,9 +155,7 @@ void Game::handleEvents()
             // this->pause = true;
         }
         if (key[ALLEGRO_KEY_Q])
-        {
             this->player->shot();
-        }
 
         // Não sei o que isso faz direito, mas faz com
         // que a tecla não fique "apertada" infinitamente
@@ -129,11 +163,10 @@ void Game::handleEvents()
             key[i] &= KEY_SEEN;
 
         this->player->checkIfPlayerIsAtDestination(this->destinationX, this->destinationY);
-
-        this->base->update();
-        this->player->update();
+        this->update();
 
         this->redraw = true;
+        this->frames++;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
@@ -182,6 +215,12 @@ void Game::render()
         this->renderScoreboard();
         this->player->render();
         this->base->render();
+
+        for (auto enemy : enemies)
+        {
+            if (enemy->isUsed())
+                enemy->render();
+        }
 
         al_flip_display();
 

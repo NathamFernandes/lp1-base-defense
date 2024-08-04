@@ -2,8 +2,7 @@
 #define GAME_H
 
 #include <string>
-#include "player.h"
-#include "base.h"
+#include <vector>
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -12,6 +11,10 @@
 
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
+
+#include "player.h"
+#include "base.h"
+#include "enemy.h"
 
 using namespace std;
 
@@ -24,6 +27,7 @@ public:
     bool init();
     void run();
     void deinit();
+    void update();
 
 private:
     int displayWidth, displayHeight;
@@ -32,6 +36,9 @@ private:
     int destinationX, destinationY;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // bool isLeftButtonPressed;
+    int objAmount; // Parecido com #define SHOTS_N. esboço.
+    int frames;
+    int quota;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
@@ -40,9 +47,11 @@ private:
 
     Player *player;
     Base *base;
-    // Enemy enemy[120];
+    vector<Enemy *> enemies;
+
     // Shot shots[120];
     // Drop drops[120];
+    // Shot shots[objAmount];
 
     unsigned char key[ALLEGRO_KEY_MAX];
 

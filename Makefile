@@ -11,16 +11,16 @@ ALLEGRO_FLAGS = -lallegro -lallegro_font -lallegro_image -lallegro_primitives
 
 EXE = $(BIN_DIR)/$(NAME)
 
-_DEPS = game.h base.h
+_DEPS = game.h base.h player.h enemy.h random.h
 DEPS = $(patsubst %,$(INCLUDE_DIR)/%,$(_DEPS))
 
-_OBJS = main.o game.o model/base.o
+_OBJS = main.o game.o model/base.o model/player.o model/enemy.o utils/random.o
 OBJS = $(patsubst %,$(OBJ_DIR)/%,$(_OBJS))
 
 all: directories $(EXE)
 
 directories:
-	mkdir -p $(BIN_DIR) $(OBJ_DIR) $(OBJ_DIR)/model
+	mkdir -p $(BIN_DIR) $(OBJ_DIR) $(OBJ_DIR)/model $(OBJ_DIR)/utils
 
 $(EXE): $(OBJS)
 	$(CC) -o $@ $^ $(ALLEGRO_FLAGS)
