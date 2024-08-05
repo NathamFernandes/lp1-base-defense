@@ -15,6 +15,7 @@ Game::Game()
     this->objAmount = 30; // TODO: ajustar quantidade e criar quota
     this->frames = 0;
     this->quota = 0;
+
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
@@ -22,11 +23,13 @@ Game::Game()
     this->base = new Base();
 
     this->enemies.resize(objAmount);
+    this->shots.resize(objAmount);
+    this->drops.resize(objAmount);
     for (int i = 0; i < this->objAmount; i++)
     {
-        // this->shots[i]->shots_init();
-        // this->drops[i]->olollo;
         this->enemies[i] = new Enemy();
+        this->shots[i] = new Shot();
+        this->drops[i] = new Drop();
     }
 }
 
@@ -40,6 +43,16 @@ Game::~Game()
     for (auto enemy : this->enemies)
     {
         delete enemy;
+    }
+
+    for (auto shot : this->shots)
+    {
+        delete shot;
+    }
+
+    for (auto drop : this->drops)
+    {
+        delete drop;
     }
 }
 
