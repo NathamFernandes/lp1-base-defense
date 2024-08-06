@@ -33,6 +33,9 @@ public:
     int getPositionY();
     void setPositionY(int y);
 
+    float getVelocity();
+    void setVelocity(float velocity);
+
     void defineRandomPosition();
     void calculateVelocity();
 
@@ -40,6 +43,7 @@ private:
     float x, y;
     float dx, dy;
     int life;
+    float velocity;
     bool used;
     Direction direction;
 };

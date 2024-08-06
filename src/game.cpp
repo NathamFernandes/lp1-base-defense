@@ -12,7 +12,7 @@ Game::Game()
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
-    this->objAmount = 30; // TODO: ajustar quantidade e criar quota
+    this->objAmount = 20;
     this->frames = 0;
     this->quota = 0;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
@@ -21,8 +21,8 @@ Game::Game()
     this->player = new Player();
     this->base = new Base();
 
-    this->enemies.resize(objAmount);
-    for (int i = 0; i < this->objAmount; i++)
+    this->enemies.resize(OBJECTS_AMOUNT);
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
         // this->shots[i]->shots_init();
         // this->drops[i]->olollo;
@@ -119,9 +119,9 @@ void Game::update()
     this->player->update();
     this->base->update();
 
-    // if (this->quota == 0) this->quota = Random::randint(1, 4);
-    if (this->quota == 0 && !(this->frames % 80))
-        this->quota = Random::randint(1, 6); // [1, 6)
+    if (this->quota == 0 && this->frames % 150 == 0)
+        this->quota = Random::randint(1, 4);
+
     for (auto enemy : enemies)
     {
         if (!enemy->isUsed() && this->quota > 0)
@@ -203,7 +203,7 @@ void Game::render()
         al_draw_text(
             this->font,
             al_map_rgb(0, 0, 0),
-            320, 240,
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
             ALLEGRO_ALIGN_CENTRE,
             "HELLO, WORLD!");
         this->renderScoreboard();
@@ -212,8 +212,7 @@ void Game::render()
 
         for (auto enemy : enemies)
         {
-            if (enemy->isUsed())
-                enemy->render();
+            enemy->render();
         }
 
         al_flip_display();
