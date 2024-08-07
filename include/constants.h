@@ -14,4 +14,6 @@ constexpr int ENEMY_LIFE = 3;
 
 constexpr int OBJECTS_AMOUNT = 20;
 
+constexpr int SHOT_RADIUS = 5;
+
 #endif // CONSTANTS_H
