@@ -22,7 +22,7 @@ class Enemy
 public:
     Enemy();
     void render();
-    void update();
+    void update(int playerPositionX, int playerPositionY);
 
     bool isUsed();
     void setUsed(bool used);
@@ -37,7 +37,7 @@ public:
     void setVelocity(float velocity);
 
     void defineRandomPosition();
-    void calculateVelocity();
+    void updatePosition(int playerPositionX, int playerPositionY);
 
 private:
     float x, y;

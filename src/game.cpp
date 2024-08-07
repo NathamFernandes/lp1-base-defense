@@ -128,12 +128,16 @@ void Game::update()
         {
             enemy->setUsed(true);
             enemy->defineRandomPosition();
-            enemy->calculateVelocity();
+            enemy->setVelocity(Random::randfloat(0.2f, 0.8f));
             this->quota--;
         }
 
         if (enemy->isUsed())
-            enemy->update();
+        {
+            enemy->update(
+                this->player->getPositionX(),
+                this->player->getPositionY());
+        }
     }
 }
 
@@ -206,9 +210,9 @@ void Game::render()
             DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
             ALLEGRO_ALIGN_CENTRE,
             "HELLO, WORLD!");
-        this->renderScoreboard();
-        this->player->render();
         this->base->render();
+        this->player->render();
+        this->renderScoreboard();
 
         for (auto enemy : enemies)
         {
