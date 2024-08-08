@@ -15,6 +15,8 @@
 #include "player.h"
 #include "base.h"
 #include "enemy.h"
+#include "shot.h"
+#include "drop.h"
 
 using namespace std;
 
@@ -35,7 +37,7 @@ private:
     int destinationX, destinationY;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // bool isLeftButtonPressed;
-    int objAmount; // Parecido com #define SHOTS_N. esboço. 
+    int objAmount; // Parecido com #define SHOTS_N. esboço.
     int frames;
     int quota;
 
@@ -47,10 +49,8 @@ private:
     Player *player;
     Base *base;
     vector<Enemy *> enemies;
-
-    // Shot shots[120];
-    // Drop drops[120];
-    // Shot shots[objAmount];
+    vector<Shot *> shots;
+    vector<Drop *> drops;
 
     unsigned char key[ALLEGRO_KEY_MAX];
 
@@ -58,9 +58,6 @@ private:
     void handleEvents();
     void render();
     void renderScoreboard();
-
-    // void keyboard_init();
-    // void keyboard_update(ALLEGRO_EVENT *event);
 };
 
 #endif // GAME_H

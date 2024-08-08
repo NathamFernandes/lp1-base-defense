@@ -15,6 +15,7 @@ Game::Game()
     this->objAmount = 20;
     this->frames = 0;
     this->quota = 0;
+
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
@@ -22,11 +23,13 @@ Game::Game()
     this->base = new Base();
 
     this->enemies.resize(OBJECTS_AMOUNT);
+    this->shots.resize(OBJECTS_AMOUNT);
+    this->drops.resize(OBJECTS_AMOUNT);
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
-        // this->shots[i]->shots_init();
-        // this->drops[i]->olollo;
         this->enemies[i] = new Enemy();
+        this->shots[i] = new Shot();
+        this->drops[i] = new Drop();
     }
 }
 
@@ -40,6 +43,16 @@ Game::~Game()
     for (auto enemy : this->enemies)
     {
         delete enemy;
+    }
+
+    for (auto shot : this->shots)
+    {
+        delete shot;
+    }
+
+    for (auto drop : this->drops)
+    {
+        delete drop;
     }
 }
 
@@ -157,12 +170,12 @@ void Game::handleEvents()
         }
         if (key[ALLEGRO_KEY_Q])
             this->player->shot();
+        // this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        this->player->checkIfPlayerIsAtDestination(this->destinationX, this->destinationY);
         this->update();
 
         this->redraw = true;
@@ -173,11 +186,11 @@ void Game::handleEvents()
         {
         case 2: // Botão direito do mouse
         {
-            if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
+            if (!this->player->move(event.mouse.x, event.mouse.y))
                 break;
 
-            this->destinationX = event.mouse.x;
-            this->destinationY = event.mouse.y;
+            this->player->setDestinationX(event.mouse.x);
+            this->player->setDestinationY(event.mouse.y);
             break;
         }
         default:
@@ -256,3 +269,19 @@ void Game::renderScoreboard()
         ALLEGRO_ALIGN_LEFT,
         "Vida da base: %d", this->base->getLife());
 }
+
+// void Game::handlePlayerShot()
+// {
+//     float currentPlayerX, currentPlayerY;
+//     ALLEGRO_MOUSE_STATE state;
+
+//     al_get_mouse_state(&state);
+
+//     float destinationX = state.x, destinationY = state.y;
+
+//     this->shot->moveToDestination(destinationX, destinationY);
+
+//     printf("Mouse position: (%d, %d)\n", state.x, state.y);
+
+//     this->player->shot();
+// }

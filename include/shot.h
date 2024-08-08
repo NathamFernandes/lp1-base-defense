@@ -4,12 +4,22 @@
 #include <allegro5/allegro_primitives.h>
 
 #include "constants.h"
+#include <allegro5/allegro_color.h>
 
 class Shot
 {
 public:
     Shot();
     ~Shot();
+
+    // bool isUsed();
+    // void setUsed(bool used);
+
+    // int getPositionX();
+    // void setPositionX(int x);
+
+    // int getPositionY();
+    // void setPositionY(int y);
 
     // bool init();
     // void deinit();
@@ -27,9 +37,10 @@ public:
 
     int getDY();
     void setDY(int dy);
+
 private:
-    float dx, dy, x, y;
-    bool isBulletFromSelf;
+    float x, y, dx, dy;
+    bool isFromPlayer, used, isMoving;
 };
 
 #endif // SHOT_H

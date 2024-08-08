@@ -15,6 +15,7 @@ Player::Player()
     this->life = 100;
     this->ammunition = 100;
     this->shotDelay = 0;
+    this->isMoving = false;
 }
 
 Player::~Player()
@@ -29,6 +30,8 @@ bool Player::init()
 
 void Player::update()
 {
+    if (this->isMoving)
+        this->stopIfAtDestination();
     this->x += this->dx;
     this->y += this->dy;
     if (this->shotDelay > 0)
@@ -41,7 +44,7 @@ void Player::render()
 
 // Mecânica
 
-bool Player::moveToDestination(int destinationX, int destinationY)
+bool Player::move(int destinationX, int destinationY)
 {
     int percursoX = destinationX - this->x;
     int percursoY = destinationY - this->y;
@@ -60,17 +63,19 @@ bool Player::moveToDestination(int destinationX, int destinationY)
     this->dx = velocidadeX;
     this->dy = velocidadeY;
 
+    this->isMoving = true;
+
     return true;
 }
 
-void Player::checkIfPlayerIsAtDestination(int destinationX, int destinationY)
+void Player::stopIfAtDestination()
 {
     // Se o player estiver se movimentando e chegar no range de destino, seta a velocidade dx como 0.
-    if (this->x <= destinationX + 2 && this->x >= destinationX - 2)
+    if (this->x <= this->destinationX + 2 && this->x >= this->destinationX - 2)
         this->dx = 0;
 
     // Se o player estiver se movimentando e chegar no range de destino, seta a velocidade dy como 0.
-    if (this->y <= destinationY + 2 && this->y >= destinationY - 2)
+    if (this->y <= this->destinationY + 2 && this->y >= this->destinationY - 2)
         this->dy = 0;
 }
 
@@ -153,4 +158,22 @@ short Player::getLife()
 void Player::setLife(short life)
 {
     this->life = life;
+}
+
+float Player::getDestinationX()
+{
+    return this->destinationX;
+}
+void Player::setDestinationX(float destinationX)
+{
+    this->destinationX = destinationX;
+}
+
+float Player::getDestinationY()
+{
+    return this->destinationY;
+}
+void Player::setDestinationY(float destinationY)
+{
+    this->destinationY = destinationY;
 }
