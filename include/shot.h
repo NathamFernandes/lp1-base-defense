@@ -10,6 +10,8 @@ public:
     Shot();
     ~Shot();
 
+    void update();
+
     // bool isUsed();
     // void setUsed(bool used);
 
@@ -24,7 +26,7 @@ public:
 
 private:
     float x, y, dx, dy;
-    bool isFromPlayer, used;
+    bool isFromPlayer, used, isMoving;
 };
 
 #endif

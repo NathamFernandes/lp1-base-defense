@@ -10,6 +10,17 @@ Shot::Shot()
     this->y = 0;
     this->dx = 0;
     this->dy = 0;
+    this->isMoving = false;
+    this->isFromPlayer = false;
+    this->used = false;
+}
+
+void Shot::update()
+{
+    // if (this->isMoving)
+    //     this->stopIfAtDestination();
+    this->x += this->dx;
+    this->y += this->dy;
 }
 
 Shot::~Shot()

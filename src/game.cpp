@@ -12,7 +12,7 @@ Game::Game()
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
-    this->objAmount = 30; // TODO: ajustar quantidade e criar quota
+    this->objAmount = 100; // TODO: ajustar quantidade e criar quota
     this->frames = 0;
     this->quota = 0;
 
@@ -165,13 +165,13 @@ void Game::handleEvents()
             // this->pause = true;
         }
         if (key[ALLEGRO_KEY_Q])
-            this->player->shot();
+            ;
+        // this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        this->player->checkIfPlayerIsAtDestination(this->destinationX, this->destinationY);
         this->update();
 
         this->redraw = true;
@@ -182,11 +182,11 @@ void Game::handleEvents()
         {
         case 2: // Botão direito do mouse
         {
-            if (!this->player->moveToDestination(event.mouse.x, event.mouse.y))
+            if (!this->player->move(event.mouse.x, event.mouse.y))
                 break;
 
-            this->destinationX = event.mouse.x;
-            this->destinationY = event.mouse.y;
+            this->player->setDestinationX(event.mouse.x);
+            this->player->setDestinationY(event.mouse.y);
             break;
         }
         default:
@@ -266,3 +266,19 @@ void Game::renderScoreboard()
         ALLEGRO_ALIGN_LEFT,
         "Vida da base: %d", this->base->getLife());
 }
+
+// void Game::handlePlayerShot()
+// {
+//     float currentPlayerX, currentPlayerY;
+//     ALLEGRO_MOUSE_STATE state;
+
+//     al_get_mouse_state(&state);
+
+//     float destinationX = state.x, destinationY = state.y;
+
+//     this->shot->moveToDestination(destinationX, destinationY);
+
+//     printf("Mouse position: (%d, %d)\n", state.x, state.y);
+
+//     this->player->shot();
+// }
