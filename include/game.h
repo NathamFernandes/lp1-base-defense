@@ -59,6 +59,7 @@ private:
     void render();
     void renderScoreboard();
     void handlePlayerShot();
+    string showTime();
 };
 
 #endif // GAME_H
