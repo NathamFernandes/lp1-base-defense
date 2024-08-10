@@ -314,9 +314,8 @@ void Game::handlePlayerShot()
 
 string Game::showTime()
 {
-    int timePassed = this->frames / 60;
-    int sec = timePassed % 60;
-    int min = timePassed / 60;
+    int sec = int(al_get_time()) % 60;
+    int min = int(al_get_time()) / 60;
 
     string secStr = (sec > 9) ? to_string(sec) : ("0" + to_string(sec));
     string minStr = (min > 9) ? to_string(min) : ("0" + to_string(min));
