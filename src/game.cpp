@@ -129,8 +129,8 @@ void Game::run()
 
 void Game::update()
 {
-    Shot *shot;
     Enemy *enemy;
+    Shot *shot;
 
     this->player->update();
     this->base->update();
@@ -160,9 +160,7 @@ void Game::update()
                 this->player->getPositionY());
 
             if (enemy->getShotDelay() == 0)
-            {
-                this->addEnemyShot(enemy);
-            }
+                this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
         }
 
         if (shot->isUsed())
@@ -300,24 +298,10 @@ void Game::handlePlayerShot()
     Shot *currentShot;
     float destinationX = state.x, destinationY = state.y;
 
-    for (int i = 0; i < this->shots.size(); i++)
-    {
-        currentShot = this->shots[i];
-        if (!currentShot->isUsed())
-        {
-            currentShot->setUsed(true);
-            currentShot->setFromPlayer(true);
-            currentShot->setPositionX(this->player->getPositionX());
-            currentShot->setPositionY(this->player->getPositionY());
-            currentShot->move(destinationX, destinationY); // Seta o "bool moving = true" dentro da func.
-            break;
-        }
-    }
-
+    this->addShot(true, this->player->getPositionX(), this->player->getPositionY(), state.x, state.y);
     this->player->shot();
 }
 
-void Game::addEnemyShot(Enemy *enemy)
 {
     Shot *shot;
 
@@ -327,12 +311,12 @@ void Game::addEnemyShot(Enemy *enemy)
         if (!shot->isUsed())
         {
             shot->setUsed(true);
-            shot->setFromPlayer(false);
-            shot->setPositionX(enemy->getPositionX());
-            shot->setPositionY(enemy->getPositionY());
-            shot->move(this->player->getPositionX(), this->player->getPositionY()); // Seta o "bool moving = true" dentro da func.
+            shot->setPositionX(positionX);
+            shot->setPositionY(positionY);
+            shot->move(destinationX, destinationY); // Seta o "bool moving = true" dentro da func.
+            if (enemy)
+                enemy->setShotDelay(400);
 
-            enemy->setShotDelay(400);
             break;
         }
     }

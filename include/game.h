@@ -60,7 +60,7 @@ private:
     void renderScoreboard();
     void handlePlayerShot();
 
-    void addEnemyShot(Enemy *enemy);
+    void addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy = nullptr);
 };
 
 #endif // GAME_H
