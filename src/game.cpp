@@ -280,32 +280,28 @@ void Game::renderScoreboard()
 
 void Game::handlePlayerShot()
 {
-    if (this->frames % 10 != 0 || this->player->getAmmunition() <= 0)
+    if (this->player->getAmmunition() <= 0 || this->player->getShotDelay() > 0)
         return;
 
-    float currentPlayerX, currentPlayerY;
     ALLEGRO_MOUSE_STATE state;
-    bool iterator = true;
-
     al_get_mouse_state(&state);
 
+    Shot *currentShot;
     float destinationX = state.x, destinationY = state.y;
 
     for (int i = 0; i < this->shots.size(); i++)
     {
-        if (!this->shots[i]->isUsed())
+        currentShot = this->shots[i];
+        if (!currentShot->isUsed())
         {
-            this->shots[i]->setUsed(true);
-            this->shots[i]->setFromPlayer(true);
-            this->shots[i]->setFromPlayer(true);
-            this->shots[i]->setPositionX(this->player->getPositionX());
-            this->shots[i]->setPositionY(this->player->getPositionY());
-            this->shots[i]->move(destinationX, destinationY);
+            currentShot->setUsed(true);
+            currentShot->setFromPlayer(true);
+            currentShot->setPositionX(this->player->getPositionX());
+            currentShot->setPositionY(this->player->getPositionY());
+            currentShot->move(destinationX, destinationY); // Seta o "bool moving = true" dentro da func.
             break;
         }
     }
-
-    printf("Mouse position: (%d, %d)\n", state.x, state.y);
 
     this->player->shot();
 }

@@ -18,6 +18,11 @@ Shot::Shot()
     this->used = false;
 }
 
+Shot::~Shot()
+{
+    // this->deinit();
+}
+
 void Shot::update()
 {
     if (this->moving && (this->x < 0 || this->x > DISPLAY_WIDTH || this->y < 0 || this->y > DISPLAY_HEIGHT))
@@ -30,23 +35,27 @@ void Shot::update()
     this->y += this->dy;
 }
 
-Shot::~Shot()
+void Shot::render()
 {
-    // this->deinit();
+    if (!this->isUsed())
+        return;
+
+    al_draw_filled_circle(this->x, this->y, SHOT_RADIUS, al_map_rgb(128, 128, 128));
 }
+
+// Mecânica
 
 bool Shot::move(int destinationX, int destinationY)
 {
     int percursoX = destinationX - this->x;
     int percursoY = destinationY - this->y;
 
-    // Caso já esteja no mesmo lugar do clique, não continua a execução
     if (abs(percursoX) <= 5 && abs(percursoY) <= 5)
         return false;
 
     float hipotenusa = sqrt((percursoX * percursoX) + (percursoY * percursoY));
 
-    float tempo = hipotenusa / 5;
+    float tempo = hipotenusa / (this->fromPlayer ? 8 : 4);
 
     float velocidadeX = percursoX / tempo;
     float velocidadeY = percursoY / tempo;
@@ -60,6 +69,8 @@ bool Shot::move(int destinationX, int destinationY)
 
     return true;
 }
+
+// Getters and Setters
 
 int Shot::getPositionX()
 {
@@ -99,14 +110,6 @@ int Shot::getDY()
 void Shot::setDY(int dy)
 {
     this->dy = dy;
-}
-
-void Shot::render()
-{
-    if (!this->isUsed())
-        return;
-
-    al_draw_filled_circle(this->x, this->y, SHOT_RADIUS, al_map_rgb(128, 128, 128));
 }
 
 bool Shot::isUsed()

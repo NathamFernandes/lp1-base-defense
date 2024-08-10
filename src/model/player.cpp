@@ -25,17 +25,14 @@ Player::~Player()
     // this->deinit();
 }
 
-bool Player::init()
-{
-    return true;
-}
-
 void Player::update()
 {
     if (this->isMoving)
         this->stopIfAtDestination();
     this->x += this->dx;
     this->y += this->dy;
+    if (this->shotDelay > 0)
+        this->shotDelay--;
 }
 void Player::render()
 {
@@ -83,10 +80,11 @@ void Player::stopIfAtDestination()
 
 void Player::shot()
 {
-    if (this->ammunition > 0)
+    if (this->ammunition > 0 && this->shotDelay == 0)
     {
         this->ammunition--;
         // Valor arbitrário
+        this->shotDelay = 10;
     }
 }
 
@@ -132,22 +130,22 @@ void Player::setDY(float dy)
     this->dy = dy;
 }
 
-unsigned short Player::getAmmunition()
+short Player::getAmmunition()
 {
     return this->ammunition;
 }
 
-void Player::setAmmunition(unsigned short ammunition)
+void Player::setAmmunition(short ammunition)
 {
     this->ammunition = ammunition;
 }
 
-unsigned short Player::getShotDelay()
+short Player::getShotDelay()
 {
     return this->shotDelay;
 }
 
-void Player::setShotDelay(unsigned short shotDelay)
+void Player::setShotDelay(short shotDelay)
 {
     this->shotDelay = shotDelay;
 }

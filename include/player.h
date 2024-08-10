@@ -7,20 +7,18 @@
 class Player
 {
 private:
-    float x, y, dx, dy;
-    short life;
-    unsigned short ammunition, shotDelay;
+    float x, y;
+    float dx, dy;
     float destinationX, destinationY;
+    short life, ammunition, shotDelay;
     bool isMoving;
 
 public:
     Player();
     ~Player();
 
-    bool init();
     void update();
     void render();
-    // void deinit();
 
     // Mecânica
 
@@ -42,11 +40,11 @@ public:
     float getDY();
     void setDY(float dy);
 
-    unsigned short getAmmunition();
-    void setAmmunition(unsigned short ammunition);
+    short getAmmunition();
+    void setAmmunition(short ammunition);
 
-    unsigned short getShotDelay();
-    void setShotDelay(unsigned short shotDelay);
+    short getShotDelay();
+    void setShotDelay(short shotDelay);
 
     short getLife();
     void setLife(short life);

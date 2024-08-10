@@ -8,26 +8,28 @@
 
 class Shot
 {
+private:
+    float x, y;
+    float dx, dy;
+    float destinationX, destinationY;
+    bool fromPlayer, used, moving;
+
 public:
     Shot();
     ~Shot();
 
-    // bool isUsed();
-    // void setUsed(bool used);
-
-    // int getPositionX();
-    // void setPositionX(int x);
-
-    // int getPositionY();
-    // void setPositionY(int y);
-
-    // bool init();
-    // void deinit();
-    void render();
     void update();
+    void render();
 
+    // Mecânica
     bool move(int destinationX, int destinationY);
 
+    // Aux
+    bool handleIfReachedPlayer();
+    bool handleIfReachedBase();
+    bool handleIfOutOfScreen();
+
+    // Getters and Setters
     int getPositionX();
     void setPositionX(int x);
 
@@ -48,15 +50,6 @@ public:
 
     bool isFromPlayer();
     void setFromPlayer(bool fromPlayer);
-
-    bool handleIfReachedPlayer();
-    bool handleIfReachedBase();
-    bool handleIfOutOfScreen();
-
-private:
-    float x, y, dx, dy;
-    bool fromPlayer, used, moving;
-    float destinationX, destinationY;
 };
 
 #endif // SHOT_H
