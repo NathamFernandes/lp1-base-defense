@@ -59,6 +59,8 @@ private:
     void render();
     void renderScoreboard();
     void handlePlayerShot();
+
+    void addEnemyShot(Enemy *enemy);
 };
 
 #endif // GAME_H

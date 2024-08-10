@@ -129,19 +129,27 @@ void Game::run()
 
 void Game::update()
 {
+    Shot *shot;
+    Enemy *enemy;
+
     this->player->update();
     this->base->update();
 
     if (this->quota == 0 && this->frames % 150 == 0)
         this->quota = Random::randint(1, 4);
 
-    for (auto enemy : enemies)
+    // Substituição do for (auto enemy : enemies) para abrigar o shots
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
+        enemy = this->enemies[i];
+        shot = this->shots[i];
+
         if (!enemy->isUsed() && this->quota > 0)
         {
             enemy->setUsed(true);
             enemy->defineRandomPosition();
             enemy->setVelocity(Random::randfloat(0.2f, 0.8f));
+
             this->quota--;
         }
 
@@ -150,11 +158,13 @@ void Game::update()
             enemy->update(
                 this->player->getPositionX(),
                 this->player->getPositionY());
-        }
-    }
 
-    for (auto shot : shots)
-    {
+            if (enemy->getShotDelay() == 0)
+            {
+                this->addEnemyShot(enemy);
+            }
+        }
+
         if (shot->isUsed())
             shot->update();
     }
@@ -230,6 +240,7 @@ void Game::render()
         this->player->render();
         this->renderScoreboard();
 
+        // Pode ser substituido com um for tradicional
         for (auto enemy : enemies)
         {
             enemy->render();
@@ -304,4 +315,25 @@ void Game::handlePlayerShot()
     }
 
     this->player->shot();
+}
+
+void Game::addEnemyShot(Enemy *enemy)
+{
+    Shot *shot;
+
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
+    {
+        shot = this->shots[i];
+        if (!shot->isUsed())
+        {
+            shot->setUsed(true);
+            shot->setFromPlayer(false);
+            shot->setPositionX(enemy->getPositionX());
+            shot->setPositionY(enemy->getPositionY());
+            shot->move(this->player->getPositionX(), this->player->getPositionY()); // Seta o "bool moving = true" dentro da func.
+
+            enemy->setShotDelay(400);
+            break;
+        }
+    }
 }

@@ -9,6 +9,7 @@ Enemy::Enemy()
     this->life = ENEMY_LIFE;
     this->used = false;
     this->defineRandomPosition();
+    this->shotDelay = 100;
 }
 
 bool Enemy::isUsed()
@@ -64,8 +65,7 @@ void Enemy::updatePosition(int playerPositionX, int playerPositionY)
         this->getPositionX() + 30 >= playerPositionX &&
         this->getPositionX() - 30 <= playerPositionX &&
         this->getPositionY() + 30 >= playerPositionY &&
-        this->getPositionY() - 30 <= playerPositionY
-    )
+        this->getPositionY() - 30 <= playerPositionY)
     {
         this->dx = 0;
         this->dy = 0;
@@ -108,7 +108,8 @@ void Enemy::setPositionY(int y)
 
 void Enemy::render()
 {
-    if (!this->isUsed()) return;
+    if (!this->isUsed())
+        return;
 
     al_draw_filled_circle(
         this->x, this->y,
@@ -130,4 +131,17 @@ void Enemy::update(int playerPositionX, int playerPositionY)
 
     this->x += this->dx;
     this->y += this->dy;
+
+    if (this->shotDelay > 0)
+        this->shotDelay--;
+}
+
+short Enemy::getShotDelay()
+{
+    return this->shotDelay;
+}
+
+void Enemy::setShotDelay(short shotDelay)
+{
+    this->shotDelay = shotDelay;
 }

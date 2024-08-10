@@ -39,6 +39,9 @@ public:
     void defineRandomPosition();
     void updatePosition(int playerPositionX, int playerPositionY);
 
+    short getShotDelay();
+    void setShotDelay(short shotDelay);
+
 private:
     float x, y;
     float dx, dy;
@@ -46,6 +49,7 @@ private:
     float velocity;
     bool used;
     Direction direction;
+    short shotDelay;
 };
 
 #endif

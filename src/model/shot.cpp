@@ -55,7 +55,7 @@ bool Shot::move(int destinationX, int destinationY)
 
     float hipotenusa = sqrt((percursoX * percursoX) + (percursoY * percursoY));
 
-    float tempo = hipotenusa / (this->fromPlayer ? 8 : 4);
+    float tempo = hipotenusa / (this->fromPlayer ? 9 : 3);
 
     float velocidadeX = percursoX / tempo;
     float velocidadeY = percursoY / tempo;

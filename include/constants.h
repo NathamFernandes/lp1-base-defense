@@ -12,7 +12,7 @@ constexpr int BASE_THICKNESS = 7;
 constexpr int ENEMY_RADIUS = 7;
 constexpr int ENEMY_LIFE = 3;
 
-constexpr int OBJECTS_AMOUNT = 40;
+constexpr int OBJECTS_AMOUNT = 60;
 
 constexpr int SHOT_RADIUS = 5;
 
