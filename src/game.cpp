@@ -152,6 +152,12 @@ void Game::update()
                 this->player->getPositionY());
         }
     }
+
+    for (auto shot : shots)
+    {
+        if (shot->isUsed())
+            shot->update();
+    }
 }
 
 void Game::handleEvents()
@@ -169,8 +175,7 @@ void Game::handleEvents()
             // this->pause = true;
         }
         if (key[ALLEGRO_KEY_Q])
-            this->player->shot();
-        // this->handlePlayerShot();
+            this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
@@ -189,8 +194,6 @@ void Game::handleEvents()
             if (!this->player->move(event.mouse.x, event.mouse.y))
                 break;
 
-            this->player->setDestinationX(event.mouse.x);
-            this->player->setDestinationY(event.mouse.y);
             break;
         }
         default:
@@ -232,6 +235,11 @@ void Game::render()
             enemy->render();
         }
 
+        for (auto shot : shots)
+        {
+            shot->render();
+        }
+
         al_flip_display();
 
         this->redraw = false;
@@ -270,18 +278,34 @@ void Game::renderScoreboard()
         "Vida da base: %d", this->base->getLife());
 }
 
-// void Game::handlePlayerShot()
-// {
-//     float currentPlayerX, currentPlayerY;
-//     ALLEGRO_MOUSE_STATE state;
+void Game::handlePlayerShot()
+{
+    if (this->frames % 10 != 0 || this->player->getAmmunition() <= 0)
+        return;
 
-//     al_get_mouse_state(&state);
+    float currentPlayerX, currentPlayerY;
+    ALLEGRO_MOUSE_STATE state;
+    bool iterator = true;
 
-//     float destinationX = state.x, destinationY = state.y;
+    al_get_mouse_state(&state);
 
-//     this->shot->moveToDestination(destinationX, destinationY);
+    float destinationX = state.x, destinationY = state.y;
 
-//     printf("Mouse position: (%d, %d)\n", state.x, state.y);
+    for (int i = 0; i < this->shots.size(); i++)
+    {
+        if (!this->shots[i]->isUsed())
+        {
+            this->shots[i]->setUsed(true);
+            this->shots[i]->setFromPlayer(true);
+            this->shots[i]->setFromPlayer(true);
+            this->shots[i]->setPositionX(this->player->getPositionX());
+            this->shots[i]->setPositionY(this->player->getPositionY());
+            this->shots[i]->move(destinationX, destinationY);
+            break;
+        }
+    }
 
-//     this->player->shot();
-// }
+    printf("Mouse position: (%d, %d)\n", state.x, state.y);
+
+    this->player->shot();
+}

@@ -58,6 +58,7 @@ private:
     void handleEvents();
     void render();
     void renderScoreboard();
+    void handlePlayerShot();
 };
 
 #endif // GAME_H

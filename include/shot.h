@@ -26,6 +26,8 @@ public:
     void render();
     void update();
 
+    bool move(int destinationX, int destinationY);
+
     int getPositionX();
     void setPositionX(int x);
 
@@ -38,9 +40,23 @@ public:
     int getDY();
     void setDY(int dy);
 
+    bool isUsed();
+    void setUsed(bool used);
+
+    bool isMoving();
+    void setMoving(bool moving);
+
+    bool isFromPlayer();
+    void setFromPlayer(bool fromPlayer);
+
+    bool handleIfReachedPlayer();
+    bool handleIfReachedBase();
+    bool handleIfOutOfScreen();
+
 private:
     float x, y, dx, dy;
-    bool isFromPlayer, used, isMoving;
+    bool fromPlayer, used, moving;
+    float destinationX, destinationY;
 };
 
 #endif // SHOT_H

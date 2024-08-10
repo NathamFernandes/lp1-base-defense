@@ -16,6 +16,8 @@ Player::Player()
     this->ammunition = 100;
     this->shotDelay = 0;
     this->isMoving = false;
+    this->destinationX = 320;
+    this->destinationY = 240;
 }
 
 Player::~Player()
@@ -34,8 +36,6 @@ void Player::update()
         this->stopIfAtDestination();
     this->x += this->dx;
     this->y += this->dy;
-    if (this->shotDelay > 0)
-        this->shotDelay--;
 }
 void Player::render()
 {
@@ -62,6 +62,8 @@ bool Player::move(int destinationX, int destinationY)
 
     this->dx = velocidadeX;
     this->dy = velocidadeY;
+    this->destinationX = destinationX;
+    this->destinationY = destinationY;
 
     this->isMoving = true;
 
@@ -81,11 +83,10 @@ void Player::stopIfAtDestination()
 
 void Player::shot()
 {
-    if (this->ammunition > 0 && this->shotDelay == 0)
+    if (this->ammunition > 0)
     {
         this->ammunition--;
         // Valor arbitrário
-        this->shotDelay = 10;
     }
 }
 
