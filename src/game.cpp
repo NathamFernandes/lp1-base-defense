@@ -308,6 +308,7 @@ void Game::handlePlayerShot()
     this->player->shot();
 }
 
+void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy)
 {
     Shot *shot;
 
@@ -316,6 +317,7 @@ void Game::handlePlayerShot()
         shot = this->shots[i];
         if (!shot->isUsed())
         {
+            shot->setFromPlayer(fromPlayer);
             shot->setUsed(true);
             shot->setPositionX(positionX);
             shot->setPositionY(positionY);
@@ -326,8 +328,6 @@ void Game::handlePlayerShot()
             break;
         }
     }
-
-    this->player->shot();
 }
 
 string Game::showTime()
