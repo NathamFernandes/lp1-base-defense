@@ -40,6 +40,7 @@ private:
     int objAmount; // Parecido com #define SHOTS_N. esboço.
     int frames;
     int quota;
+    int enemiesKilled;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;

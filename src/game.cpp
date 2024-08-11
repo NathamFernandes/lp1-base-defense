@@ -15,6 +15,7 @@ Game::Game()
     this->objAmount = 20;
     this->frames = 0;
     this->quota = 0;
+    this->enemiesKilled = 0;
 
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
@@ -173,6 +174,7 @@ void Game::update()
             if (shots_collide(false, enemy->getPositionX(), enemy->getPositionY(), 11, 11))
             {
                 enemy->setUsed(false);
+                this->enemiesKilled++;
                 // drop->setUsed(true);
             }
 
@@ -306,6 +308,12 @@ void Game::renderScoreboard()
         this->font,
         al_map_rgb(0, 0, 0),
         40, 110,
+        ALLEGRO_ALIGN_LEFT,
+        "Inimigos mortos: %d", this->enemiesKilled);
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        40, 140,
         ALLEGRO_ALIGN_LEFT,
         "Tempo: %s", this->showTime().c_str());
 }
