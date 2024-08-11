@@ -61,6 +61,7 @@ private:
     void handlePlayerShot();
 
     void addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy = nullptr);
+    string showTime();
 };
 
 #endif // GAME_H

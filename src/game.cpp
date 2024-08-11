@@ -285,6 +285,12 @@ void Game::renderScoreboard()
         40, 80,
         ALLEGRO_ALIGN_LEFT,
         "Vida da base: %d", this->base->getLife());
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        40, 110,
+        ALLEGRO_ALIGN_LEFT,
+        "Tempo: %s", this->showTime().c_str());
 }
 
 void Game::handlePlayerShot()
@@ -320,4 +326,17 @@ void Game::handlePlayerShot()
             break;
         }
     }
+
+    this->player->shot();
+}
+
+string Game::showTime()
+{
+    int sec = int(al_get_time()) % 60;
+    int min = int(al_get_time()) / 60;
+
+    string secStr = (sec > 9) ? to_string(sec) : ("0" + to_string(sec));
+    string minStr = (min > 9) ? to_string(min) : ("0" + to_string(min));
+
+    return minStr + ":" + secStr;
 }
