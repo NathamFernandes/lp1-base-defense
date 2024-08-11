@@ -15,6 +15,7 @@ Game::Game()
     this->objAmount = 20;
     this->frames = 0;
     this->quota = 0;
+    this->enemiesKilled = 0;
 
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
@@ -133,7 +134,18 @@ void Game::update()
     Shot *shot;
 
     this->player->update();
+    if (shots_collide(true, this->player->getPositionX(), this->player->getPositionY(), 10, 10))
+    {
+        short life = this->player->getLife();
+        this->player->setLife(life - 1);
+    }
+
     this->base->update();
+    if (shots_collide(true, this->base->getPositionX1(), this->base->getPositionY1(), this->base->getPositionX2() - this->base->getPositionX1(), this->base->getPositionY2() - this->base->getPositionY1()))
+    {
+        short life = this->base->getLife();
+        this->base->setLife(life - 1);
+    }
 
     if (this->quota == 0 && this->frames % 150 == 0)
         this->quota = Random::randint(1, 4);
@@ -159,7 +171,14 @@ void Game::update()
                 this->player->getPositionX(),
                 this->player->getPositionY());
 
-            if (enemy->getShotDelay() == 0)
+            if (shots_collide(false, enemy->getPositionX(), enemy->getPositionY(), 11, 11))
+            {
+                enemy->setUsed(false);
+                this->enemiesKilled++;
+                // drop->setUsed(true);
+            }
+
+            if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
         }
 
@@ -290,6 +309,12 @@ void Game::renderScoreboard()
         al_map_rgb(0, 0, 0),
         40, 110,
         ALLEGRO_ALIGN_LEFT,
+        "Inimigos mortos: %d", this->enemiesKilled);
+    al_draw_textf(
+        this->font,
+        al_map_rgb(0, 0, 0),
+        40, 140,
+        ALLEGRO_ALIGN_LEFT,
         "Tempo: %s", this->showTime().c_str());
 }
 
@@ -339,4 +364,57 @@ string Game::showTime()
     string minStr = (min > 9) ? to_string(min) : ("0" + to_string(min));
 
     return minStr + ":" + secStr;
+}
+
+// From allegro vivace
+
+bool Game::shots_collide(bool fromPlayer, int x, int y, int w, int h)
+{
+    Shot *shot;
+
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
+    {
+        shot = this->shots[i];
+        if (!shots[i]->isUsed())
+            continue;
+
+        // don't collide with one's own shots
+        if (shots[i]->isFromPlayer() == fromPlayer)
+            continue;
+
+        int sw, sh;
+        if (fromPlayer)
+        {
+            sw = 10;
+            sh = 10;
+        }
+        else
+        {
+            sw = 5;
+            sh = 5;
+        }
+
+        if (this->collide(x, y, x + w, y + h, shots[i]->getPositionX(), shots[i]->getPositionY(), shots[i]->getPositionX() + sw, shots[i]->getPositionY() + sh))
+        {
+            // fx_add(true, shots[i].x + (sw / 2), shots[i].y + (sh / 2));
+            shots[i]->setUsed(false);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Game::collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)
+{
+    if (ax1 > bx2)
+        return false;
+    if (ax2 < bx1)
+        return false;
+    if (ay1 > by2)
+        return false;
+    if (ay2 < by1)
+        return false;
+
+    return true;
 }

@@ -19,6 +19,11 @@ public:
     int getLife();
     void setLife(int life);
 
+    int getPositionX1();
+    int getPositionY1();
+    int getPositionX2();
+    int getPositionY2();
+
 private:
     int width, height;
     int life;

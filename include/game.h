@@ -40,6 +40,7 @@ private:
     int objAmount; // Parecido com #define SHOTS_N. esboço.
     int frames;
     int quota;
+    int enemiesKilled;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
@@ -63,6 +64,8 @@ private:
 
     void addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy = nullptr);
     string showTime();
+    bool shots_collide(bool fromPlayer, int x, int y, int w, int h);
+    bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2);
 };
 
 #endif // GAME_H
