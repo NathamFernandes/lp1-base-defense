@@ -21,9 +21,9 @@ void Base::update()
     if (this->life >= 80)
         this->setRGBColor(0, 255, 0); // green
     else if (this->life >= 50)
-        this->setRGBColor(255, 165, 0); // orange
-    else if (this->life >= 20)
         this->setRGBColor(255, 255, 0); // yellow
+    else if (this->life >= 20)
+        this->setRGBColor(255, 165, 0); // orange
     else
         this->setRGBColor(255, 0, 0); // red
 }
@@ -43,6 +43,8 @@ void Base::setRGBColor(int r, int g, int b)
     this->blue = b;
 }
 
+// Getters and Setters
+
 int Base::getLife()
 {
     return this->life;
@@ -51,4 +53,21 @@ int Base::getLife()
 void Base::setLife(int life)
 {
     this->life = life;
+}
+
+int Base::getPositionX1()
+{
+    return this->x1;
+}
+int Base::getPositionY1()
+{
+    return this->y1;
+}
+int Base::getPositionX2()
+{
+    return this->x2;
+}
+int Base::getPositionY2()
+{
+    return this->y2;
 }
