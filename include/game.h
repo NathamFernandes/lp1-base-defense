@@ -66,6 +66,8 @@ private:
     string showTime();
     bool shots_collide(bool fromPlayer, int x, int y, int w, int h);
     bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2);
+    void addDrop(int positionX, int positionY);
+    bool collectDrop(int x, int y, int w, int h);
 };
 
 #endif // GAME_H

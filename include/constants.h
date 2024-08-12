@@ -9,6 +9,9 @@ constexpr int BASE_HEIGHT = 180;
 constexpr int BASE_LIFE = 100;
 constexpr int BASE_THICKNESS = 7;
 
+constexpr int PLAYER_LIFE = 100;
+constexpr int AMMUNITION = 100;
+
 constexpr int ENEMY_RADIUS = 7;
 constexpr int ENEMY_LIFE = 3;
 

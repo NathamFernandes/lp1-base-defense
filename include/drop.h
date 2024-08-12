@@ -14,6 +14,7 @@ enum DropType
     AMMUNITION_DROP = 0,
     PLAYER_LIFE_DROP,
     BASE_LIFE_DROP,
+    LAST_DROP
 };
 
 class Drop
@@ -41,7 +42,7 @@ public:
     void setDropType(DropType type);
 
     bool isUsed();
-    void setUsed(int used);
+    void setUsed(bool used);
 };
 
 #endif

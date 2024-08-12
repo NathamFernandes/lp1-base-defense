@@ -4,8 +4,6 @@
 
 Drop::Drop()
 {
-    this->x = 0;
-    this->y = 0;
     this->points = 0;
     this->type = BASE_LIFE_DROP;
     this->used = false;
@@ -13,10 +11,31 @@ Drop::Drop()
 
 void Drop::render(ALLEGRO_FONT *font)
 {
+    if (!this->isUsed())
+        return;
+
+    ALLEGRO_COLOR dropColor;
+
+    switch (this->getDropType())
+    {
+    case AMMUNITION_DROP:
+        dropColor = al_map_rgb(120, 140, 130);
+        break;
+    case PLAYER_LIFE_DROP:
+        dropColor = al_map_rgb(255, 130, 110);
+        break;
+    case BASE_LIFE_DROP:
+        dropColor = al_map_rgb(255, 230, 0);
+        break;
+    case LAST_DROP:
+    default:
+        break;
+    }
+
     al_draw_filled_rectangle(
         this->x, this->y,
         this->x + DROP_WIDTH, this->y + DROP_HEIGHT,
-        al_map_rgb(180, 245, 150));
+        dropColor);
     al_draw_text(
         font,
         al_map_rgb(0, 0, 0),
@@ -71,7 +90,7 @@ bool Drop::isUsed()
     return this->used;
 }
 
-void Drop::setUsed(int used)
+void Drop::setUsed(bool used)
 {
     this->used = used;
 }
