@@ -11,6 +11,7 @@ constexpr int BASE_THICKNESS = 7;
 
 constexpr int PLAYER_LIFE = 100;
 constexpr int AMMUNITION = 100;
+constexpr int PLAYER_RADIUS = 13;
 
 constexpr int ENEMY_RADIUS = 7;
 constexpr int ENEMY_LIFE = 3;

@@ -1,8 +1,5 @@
 #include "player.h"
 
-#include <iostream>
-#include <cmath>
-
 using namespace std;
 
 Player::Player()
@@ -36,7 +33,7 @@ void Player::update()
 }
 void Player::render()
 {
-    al_draw_filled_circle(this->x, this->y, 13, al_map_rgb_f(1, 0, 1));
+    al_draw_filled_circle(this->x, this->y, PLAYER_RADIUS, al_map_rgb_f(1, 0, 1));
 }
 
 // Mecânica

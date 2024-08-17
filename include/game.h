@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
+#include <cmath>
 
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_font.h>
@@ -70,6 +72,8 @@ private:
     bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2);
     void addDrop(int positionX, int positionY);
     bool collectDrop(int x, int y, int w, int h);
+
+    int pointsDistance(int x1, int y1, int x2, int y2);
 };
 
 #endif // GAME_H

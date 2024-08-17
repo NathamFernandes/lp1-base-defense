@@ -1,8 +1,5 @@
 #include "game.h"
 
-#include <iostream>
-#include <cmath>
-
 using namespace std;
 
 Game::Game()
@@ -179,26 +176,53 @@ void Game::update()
             {
                 enemy->setUsed(false);
                 this->enemiesKilled++;
-                if (
-                    this->player->getLife() <= PLAYER_LIFE * 0.7 ||
-                    this->player->getAmmunition() <= AMMUNITION * 0.6 ||
-                    this->base->getLife() <= BASE_LIFE * 0.7)
-                {
-                    this->addDrop(enemy->getPositionX(), enemy->getPositionY());
-                }
+                this->addDrop(enemy->getPositionX(), enemy->getPositionY());
             }
 
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
+
+            // Colisão do inimigo com a base
+            if (this->collide(
+                    this->base->getPositionX1(),
+                    this->base->getPositionY1(),
+                    this->base->getPositionX2() + BASE_THICKNESS,
+                    this->base->getPositionY2() + BASE_THICKNESS,
+                    enemy->getPositionX(),
+                    enemy->getPositionY(),
+                    enemy->getPositionX() + ENEMY_RADIUS,
+                    enemy->getPositionY() + ENEMY_RADIUS))
+            {
+                enemy->setUsed(false);
+                int baseLife = this->base->getLife();
+                this->base->setLife(baseLife - 5);
+            }
+
+            // Colisão dos inimigos com o player
+            if (pointsDistance(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    enemy->getPositionX(),
+                    enemy->getPositionY()) < (PLAYER_RADIUS + ENEMY_RADIUS - 2))
+            {
+                enemy->setUsed(false);
+                int playerLife = this->player->getLife();
+                this->player->setLife(playerLife - 5);
+            }
         }
 
         if (drop->isUsed())
         {
             drop->update();
-            if (this->collide(this->player->getPositionX(), this->player->getPositionY(),
-                              this->player->getPositionX() + 10, this->player->getPositionY() + 10,
-                              drop->getPositionX(), drop->getPositionY(),
-                              drop->getPositionX() + DROP_WIDTH, drop->getPositionY() + DROP_HEIGHT))
+            if (this->collide(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    this->player->getPositionX() + 10,
+                    this->player->getPositionY() + 10,
+                    drop->getPositionX(),
+                    drop->getPositionY(),
+                    drop->getPositionX() + DROP_WIDTH,
+                    drop->getPositionY() + DROP_HEIGHT))
             {
                 drop->setUsed(false);
                 int points = drop->getPoints();
@@ -221,9 +245,7 @@ void Game::update()
                 }
                 case AMMUNITION_DROP:
                 {
-                    int ammunition = this->player->getAmmunition();
-                    int newAmmunition = ammunition + points;
-                    this->player->setAmmunition(newAmmunition > AMMUNITION ? AMMUNITION : newAmmunition);
+                    this->player->setAmmunition(this->player->getAmmunition() + points);
                     break;
                 }
                 case LAST_DROP:
@@ -510,4 +532,9 @@ void Game::addDrop(int positionX, int positionY)
             break;
         }
     }
+}
+
+int Game::pointsDistance(int x1, int y1, int x2, int y2)
+{
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
