@@ -79,6 +79,7 @@ bool Game::init()
     // Antialiasing
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
+    // al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
@@ -105,6 +106,23 @@ bool Game::init()
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
 
+    if (!must_init(al_install_audio(), "audio"))
+        return false;
+    if (!must_init(al_init_acodec_addon(), "audio codecs"))
+        return false;
+    if (!must_init(al_reserve_samples(16), "reserve samples"))
+        return false;
+
+    // this->sample = al_load_sample("./src/elephant.wav");
+    // if (!must_init(this->sample, "elephant"))
+    //     return false;
+
+    this->music = al_load_audio_stream("./src/assets/audio/music.opus", 4, 1024);
+    if (!must_init(this->music, "music"))
+        return false;
+
+    al_set_audio_stream_playmode(this->music, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_audio_stream_to_mixer(this->music, al_get_default_mixer());
     al_register_event_source(
         this->queue, al_get_keyboard_event_source());
     al_register_event_source(
@@ -378,6 +396,7 @@ void Game::deinit()
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
+    al_destroy_audio_stream(this->music);
 }
 
 // Aux
