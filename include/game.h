@@ -8,6 +8,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 #define KEY_SEEN 1
 #define KEY_RELEASED 2
@@ -48,6 +50,8 @@ private:
     ALLEGRO_EVENT_QUEUE *queue;
     ALLEGRO_TIMER *timer;
     ALLEGRO_FONT *font;
+    ALLEGRO_AUDIO_STREAM *music;
+    ALLEGRO_SAMPLE *sample;
 
     Player *player;
     Base *base;
