@@ -1,8 +1,5 @@
 #include "game.h"
 
-#include <iostream>
-#include <cmath>
-
 using namespace std;
 
 Game::Game()
@@ -197,6 +194,18 @@ void Game::update()
                 enemy->setUsed(false);
                 int baseLife = this->base->getLife();
                 this->base->setLife(baseLife - 5);
+            }
+
+            // Colisão dos inimigos com o player
+            if (pointsDistance(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    enemy->getPositionX(),
+                    enemy->getPositionY()) < (PLAYER_RADIUS + ENEMY_RADIUS - 2))
+            {
+                enemy->setUsed(false);
+                int playerLife = this->player->getLife();
+                this->player->setLife(playerLife - 5);
             }
         }
 
@@ -500,4 +509,9 @@ void Game::addDrop(int positionX, int positionY)
             break;
         }
     }
+}
+
+int Game::pointsDistance(int x1, int y1, int x2, int y2)
+{
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
