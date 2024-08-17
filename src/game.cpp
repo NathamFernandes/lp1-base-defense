@@ -188,6 +188,22 @@ void Game::update()
 
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
+
+            // Colisão do inimigo com a base
+            if (this->collide(
+                    this->base->getPositionX1(),
+                    this->base->getPositionY1(),
+                    this->base->getPositionX2() + BASE_THICKNESS,
+                    this->base->getPositionY2() + BASE_THICKNESS,
+                    enemy->getPositionX(),
+                    enemy->getPositionY(),
+                    enemy->getPositionX() + ENEMY_RADIUS,
+                    enemy->getPositionY() + ENEMY_RADIUS))
+            {
+                enemy->setUsed(false);
+                int baseLife = this->base->getLife();
+                this->base->setLife(baseLife - 5);
+            }
         }
 
         if (drop->isUsed())
