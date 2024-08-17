@@ -134,6 +134,7 @@ void Game::update()
 {
     Enemy *enemy;
     Shot *shot;
+    Drop *drop;
 
     this->player->update();
     if (shots_collide(true, this->player->getPositionX(), this->player->getPositionY(), 10, 10))
@@ -157,6 +158,7 @@ void Game::update()
     {
         enemy = this->enemies[i];
         shot = this->shots[i];
+        drop = this->drops[i];
 
         if (!enemy->isUsed() && this->quota > 0)
         {
@@ -177,11 +179,57 @@ void Game::update()
             {
                 enemy->setUsed(false);
                 this->enemiesKilled++;
-                // drop->setUsed(true);
+                if (
+                    this->player->getLife() <= PLAYER_LIFE * 0.7 ||
+                    this->player->getAmmunition() <= AMMUNITION * 0.6 ||
+                    this->base->getLife() <= BASE_LIFE * 0.7)
+                {
+                    this->addDrop(enemy->getPositionX(), enemy->getPositionY());
+                }
             }
 
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
+        }
+
+        if (drop->isUsed())
+        {
+            if (this->collide(this->player->getPositionX(), this->player->getPositionY(),
+                              this->player->getPositionX() + 10, this->player->getPositionY() + 10,
+                              drop->getPositionX(), drop->getPositionY(),
+                              drop->getPositionX() + DROP_WIDTH, drop->getPositionY() + DROP_HEIGHT))
+            {
+                drop->setUsed(false);
+                int points = drop->getPoints();
+
+                switch (drop->getDropType())
+                {
+                case BASE_LIFE_DROP:
+                {
+                    int baseLife = this->base->getLife();
+                    int newBaseLife = baseLife + points;
+                    this->base->setLife(newBaseLife > BASE_LIFE ? BASE_LIFE : newBaseLife);
+                    break;
+                }
+                case PLAYER_LIFE_DROP:
+                {
+                    int playerLife = this->player->getLife();
+                    int newPlayerLife = playerLife + points;
+                    this->player->setLife(newPlayerLife > PLAYER_LIFE ? PLAYER_LIFE : newPlayerLife);
+                    break;
+                }
+                case AMMUNITION_DROP:
+                {
+                    int ammunition = this->player->getAmmunition();
+                    int newAmmunition = ammunition + points;
+                    this->player->setAmmunition(newAmmunition > AMMUNITION ? AMMUNITION : newAmmunition);
+                    break;
+                }
+                case LAST_DROP:
+                default:
+                    break;
+                }
+            }
         }
 
         if (shot->isUsed())
@@ -255,6 +303,18 @@ void Game::render()
     if (this->redraw && al_event_queue_is_empty(this->queue))
     {
         al_clear_to_color(al_map_rgb(255, 255, 255));
+        al_draw_text(
+            this->font,
+            al_map_rgb(0, 0, 0),
+            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+            ALLEGRO_ALIGN_CENTRE,
+            "HELLO, WORLD!");
+
+        for (auto drop : drops)
+        {
+            drop->render(this->font);
+        }
+
         this->base->render();
         this->player->render();
         this->renderScoreboard();
@@ -347,8 +407,8 @@ void Game::handlePlayerShot()
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    Shot *currentShot;
-    float destinationX = state.x, destinationY = state.y;
+    // Shot *currentShot;
+    // float destinationX = state.x, destinationY = state.y;
 
     this->addShot(true, this->player->getPositionX(), this->player->getPositionY(), state.x, state.y);
     this->player->shot();
@@ -391,11 +451,11 @@ string Game::showTime()
 
 bool Game::shots_collide(bool fromPlayer, int x, int y, int w, int h)
 {
-    Shot *shot;
+    // Shot *shot;
 
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
-        shot = this->shots[i];
+        // shot = this->shots[i];
         if (!shots[i]->isUsed())
             continue;
 
@@ -438,4 +498,20 @@ bool Game::collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2
         return false;
 
     return true;
+}
+
+void Game::addDrop(int positionX, int positionY)
+{
+    for (auto drop : this->drops)
+    {
+        if (!drop->isUsed())
+        {
+            drop->setDropType((DropType)Random::randint(0, LAST_DROP));
+            drop->setPoints(Random::randint(1, 8));
+            drop->setPositionX(positionX);
+            drop->setPositionY(positionY);
+            drop->setUsed(true);
+            break;
+        }
+    }
 }
