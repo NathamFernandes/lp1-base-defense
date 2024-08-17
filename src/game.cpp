@@ -177,13 +177,7 @@ void Game::update()
             {
                 enemy->setUsed(false);
                 this->enemiesKilled++;
-                if (
-                    this->player->getLife() <= PLAYER_LIFE * 0.7 ||
-                    this->player->getAmmunition() <= AMMUNITION * 0.6 ||
-                    this->base->getLife() <= BASE_LIFE * 0.7)
-                {
-                    this->addDrop(enemy->getPositionX(), enemy->getPositionY());
-                }
+                this->addDrop(enemy->getPositionX(), enemy->getPositionY());
             }
 
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
@@ -208,10 +202,15 @@ void Game::update()
 
         if (drop->isUsed())
         {
-            if (this->collide(this->player->getPositionX(), this->player->getPositionY(),
-                              this->player->getPositionX() + 10, this->player->getPositionY() + 10,
-                              drop->getPositionX(), drop->getPositionY(),
-                              drop->getPositionX() + DROP_WIDTH, drop->getPositionY() + DROP_HEIGHT))
+            if (this->collide(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    this->player->getPositionX() + 10,
+                    this->player->getPositionY() + 10,
+                    drop->getPositionX(),
+                    drop->getPositionY(),
+                    drop->getPositionX() + DROP_WIDTH,
+                    drop->getPositionY() + DROP_HEIGHT))
             {
                 drop->setUsed(false);
                 int points = drop->getPoints();
@@ -234,9 +233,7 @@ void Game::update()
                 }
                 case AMMUNITION_DROP:
                 {
-                    int ammunition = this->player->getAmmunition();
-                    int newAmmunition = ammunition + points;
-                    this->player->setAmmunition(newAmmunition > AMMUNITION ? AMMUNITION : newAmmunition);
+                    this->player->setAmmunition(this->player->getAmmunition() + points);
                     break;
                 }
                 case LAST_DROP:
