@@ -41,6 +41,8 @@ private:
     int frames;
     int quota;
     int enemiesKilled;
+    bool isGameOver, isGamePaused;
+    int pauseDelay;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;

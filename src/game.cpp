@@ -16,7 +16,9 @@ Game::Game()
     this->frames = 0;
     this->quota = 0;
     this->enemiesKilled = 0;
-
+    this->isGameOver = false;
+    this->isGamePaused = false;
+    this->pauseDelay = 10;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
@@ -195,21 +197,27 @@ void Game::handleEvents()
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
-        if (key[ALLEGRO_KEY_ESCAPE])
+        if (key[ALLEGRO_KEY_ESCAPE] && this->pauseDelay == 0)
         {
-            this->running = false;
-            // TODO: feature opcional de pause
-            // this->pause = true;
+            this->isGamePaused = !this->isGamePaused;
+            this->pauseDelay = 10;
         }
-        if (key[ALLEGRO_KEY_Q])
+
+        if (key[ALLEGRO_KEY_Q] && !this->isGamePaused && !this->isGameOver)
             this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        this->update();
+        if (!this->isGameOver && !this->isGamePaused)
+            this->update();
 
+        if (this->player->getLife() <= 0 || this->base->getLife() <= 0)
+            this->isGameOver = true;
+
+        if (this->pauseDelay > 0)
+            this->pauseDelay--;
         this->redraw = true;
         this->frames++;
         break;
@@ -247,15 +255,28 @@ void Game::render()
     if (this->redraw && al_event_queue_is_empty(this->queue))
     {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        al_draw_text(
-            this->font,
-            al_map_rgb(0, 0, 0),
-            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
-            ALLEGRO_ALIGN_CENTRE,
-            "HELLO, WORLD!");
         this->base->render();
         this->player->render();
         this->renderScoreboard();
+
+        if (this->isGameOver)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                ALLEGRO_ALIGN_CENTRE,
+                "GAME OVER!");
+        }
+        else if (this->isGamePaused)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                ALLEGRO_ALIGN_CENTRE,
+                "JOGO PAUSADO!");
+        }
 
         // Pode ser substituido com um for tradicional
         for (auto enemy : enemies)
