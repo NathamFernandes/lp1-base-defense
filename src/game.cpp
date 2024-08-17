@@ -194,6 +194,7 @@ void Game::update()
 
         if (drop->isUsed())
         {
+            drop->update();
             if (this->collide(this->player->getPositionX(), this->player->getPositionY(),
                               this->player->getPositionX() + 10, this->player->getPositionY() + 10,
                               drop->getPositionX(), drop->getPositionY(),
@@ -303,12 +304,6 @@ void Game::render()
     if (this->redraw && al_event_queue_is_empty(this->queue))
     {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        al_draw_text(
-            this->font,
-            al_map_rgb(0, 0, 0),
-            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
-            ALLEGRO_ALIGN_CENTRE,
-            "HELLO, WORLD!");
 
         for (auto drop : drops)
         {
@@ -511,6 +506,7 @@ void Game::addDrop(int positionX, int positionY)
             drop->setPositionX(positionX);
             drop->setPositionY(positionY);
             drop->setUsed(true);
+            drop->setLifeTime(DROP_LIFETIME);
             break;
         }
     }

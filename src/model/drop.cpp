@@ -7,12 +7,31 @@ Drop::Drop()
     this->points = 0;
     this->type = BASE_LIFE_DROP;
     this->used = false;
+    this->lifeTime = DROP_LIFETIME;
+}
+
+void Drop::update()
+{
+    if (this->lifeTime == 0)
+    {
+        this->used = false;
+        return;
+    }
+
+    if (this->isUsed() && this->lifeTime > 0)
+        this->lifeTime--;
 }
 
 void Drop::render(ALLEGRO_FONT *font)
 {
     if (!this->isUsed())
         return;
+
+    if (this->lifeTime == 0)
+    {
+        this->used = false;
+        return;
+    }
 
     ALLEGRO_COLOR dropColor;
 
@@ -93,4 +112,14 @@ bool Drop::isUsed()
 void Drop::setUsed(bool used)
 {
     this->used = used;
+}
+
+int Drop::getLifeTime()
+{
+    return this->lifeTime;
+}
+
+void Drop::setLifeTime(int lifeTime)
+{
+    this->lifeTime = lifeTime;
 }

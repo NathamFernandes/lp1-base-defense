@@ -21,5 +21,6 @@ constexpr int SHOT_RADIUS = 5;
 
 constexpr int DROP_WIDTH = 20;
 constexpr int DROP_HEIGHT = 20;
+constexpr int DROP_LIFETIME = 900;
 
 #endif // CONSTANTS_H

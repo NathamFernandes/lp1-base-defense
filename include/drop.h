@@ -2,7 +2,7 @@
 #define DROP_H
 
 #include <allegro5/allegro_primitives.h>
- #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_color.h>
 
 #include "constants.h"
@@ -24,9 +24,11 @@ private:
     DropType type;
     int points;
     bool used;
+    int lifeTime;
 
 public:
     Drop();
+    void update();
     void render(ALLEGRO_FONT *font);
 
     int getPositionX();
@@ -43,6 +45,9 @@ public:
 
     bool isUsed();
     void setUsed(bool used);
+
+    int getLifeTime();
+    void setLifeTime(int lifeTime);
 };
 
 #endif
