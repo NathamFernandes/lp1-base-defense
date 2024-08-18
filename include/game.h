@@ -45,7 +45,7 @@ private:
     int frames;
     int quota;
     int enemiesKilled;
-    bool isGameOver, isGamePaused;
+    bool isGameOver, isGamePaused, isGameFinished;
     int pauseDelay;
 
     ALLEGRO_DISPLAY *display;

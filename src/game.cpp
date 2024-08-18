@@ -15,6 +15,7 @@ Game::Game()
     this->enemiesKilled = 0;
     this->isGameOver = false;
     this->isGamePaused = false;
+    this->isGameFinished = false;
     this->pauseDelay = 10;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
@@ -292,14 +293,17 @@ void Game::handleEvents()
             this->pauseDelay = 10;
         }
 
-        if (key[ALLEGRO_KEY_Q] && !this->isGamePaused && !this->isGameOver)
+        if (key[ALLEGRO_KEY_Q] && !this->isGamePaused && !this->isGameOver && !this->isGameFinished)
             this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        if (!this->isGameOver && !this->isGamePaused)
+        if (this->frames / 60 >= 300)
+            this->isGameFinished = true;
+
+        if (!this->isGameOver && !this->isGamePaused && !this->isGameFinished)
             this->update();
 
         if (this->player->getLife() <= 0 || this->base->getLife() <= 0)
@@ -308,7 +312,7 @@ void Game::handleEvents()
         if (this->pauseDelay > 0)
             this->pauseDelay--;
         this->redraw = true;
-        if (!this->isGamePaused && !this->isGameOver)
+        if (!this->isGamePaused && !this->isGamePaused && !this->isGameFinished)
             this->frames++;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
@@ -372,6 +376,15 @@ void Game::render()
                 DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
                 ALLEGRO_ALIGN_CENTRE,
                 "JOGO PAUSADO!");
+        }
+        else if (this->isGameFinished)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                ALLEGRO_ALIGN_CENTRE,
+                "PARABÉNS, VOCÊ GANHOU!");
         }
 
         // Pode ser substituido com um for tradicional
