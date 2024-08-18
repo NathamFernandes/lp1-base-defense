@@ -308,7 +308,8 @@ void Game::handleEvents()
         if (this->pauseDelay > 0)
             this->pauseDelay--;
         this->redraw = true;
-        this->frames++;
+        if (!this->isGamePaused && !this->isGameOver)
+            this->frames++;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
@@ -474,8 +475,9 @@ void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinatio
 
 string Game::showTime()
 {
-    int sec = int(al_get_time()) % 60;
-    int min = int(al_get_time()) / 60;
+    int totalTime = this->frames / 60;
+    int sec = totalTime % 60;
+    int min = totalTime / 60;
 
     string secStr = (sec > 9) ? to_string(sec) : ("0" + to_string(sec));
     string minStr = (min > 9) ? to_string(min) : ("0" + to_string(min));
