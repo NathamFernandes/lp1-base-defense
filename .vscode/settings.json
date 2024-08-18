@@ -6,6 +6,7 @@
     "cmath": "cpp",
     "xstring": "cpp",
     "random": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "algorithm": "cpp"
   }
 }

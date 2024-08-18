@@ -114,9 +114,31 @@ bool Game::init()
     if (!must_init(al_reserve_samples(16), "reserve samples"))
         return false;
 
-    // this->sample = al_load_sample("./src/elephant.wav");
-    // if (!must_init(this->sample, "elephant"))
-    //     return false;
+    this->shotSample = al_load_sample("./src/assets/sound_effects/shot.ogg");
+    if (!must_init(this->shotSample, "shot sample"))
+        return false;
+
+    this->powerUpSample = al_load_sample("./src/assets/sound_effects/power_up.ogg");
+    if (!must_init(this->powerUpSample, "power up sample"))
+        return false;
+
+    this->hitSample[0] = al_load_sample("./src/assets/sound_effects/player_hit.ogg");
+    if (!must_init(this->hitSample[0], "player hit sample"))
+        return false;
+    this->hitSample[1] = al_load_sample("./src/assets/sound_effects/enemy_hit.ogg");
+    if (!must_init(this->hitSample[1], "enemy hit sample"))
+        return false;
+    this->hitSample[2] = al_load_sample("./src/assets/sound_effects/base_hit.ogg");
+    if (!must_init(this->hitSample[2], "base hit sample"))
+        return false;
+
+    this->gameOverSample = al_load_sample("./src/assets/sound_effects/game_over.ogg");
+    if (!must_init(this->gameOverSample, "game over sample"))
+        return false;
+
+    this->gameFinishedSample = al_load_sample("./src/assets/sound_effects/game_finished.ogg");
+    if (!must_init(this->gameFinishedSample, "game finished sample"))
+        return false;
 
     this->music = al_load_audio_stream("./src/assets/audio/music.opus", 4, 1024);
     if (!must_init(this->music, "music"))
@@ -155,6 +177,7 @@ void Game::update()
     this->player->update();
     if (shots_collide(true, this->player->getPositionX(), this->player->getPositionY(), 10, 10))
     {
+        this->playSample(this->hitSample[0], true);
         short life = this->player->getLife();
         this->player->setLife(life - 1);
     }
@@ -162,6 +185,7 @@ void Game::update()
     this->base->update();
     if (shots_collide(true, this->base->getPositionX1(), this->base->getPositionY1(), this->base->getPositionX2() - this->base->getPositionX1(), this->base->getPositionY2() - this->base->getPositionY1()))
     {
+        this->playSample(this->hitSample[2]);
         short life = this->base->getLife();
         this->base->setLife(life - 1);
     }
@@ -193,6 +217,7 @@ void Game::update()
 
             if (shots_collide(false, enemy->getPositionX(), enemy->getPositionY(), 11, 11))
             {
+                this->playSample(this->hitSample[1], false);
                 enemy->setUsed(false);
                 this->enemiesKilled++;
                 this->addDrop(enemy->getPositionX(), enemy->getPositionY());
@@ -212,6 +237,7 @@ void Game::update()
                     enemy->getPositionX() + ENEMY_RADIUS,
                     enemy->getPositionY() + ENEMY_RADIUS))
             {
+                this->playSample(this->hitSample[2], false);
                 enemy->setUsed(false);
                 int baseLife = this->base->getLife();
                 this->base->setLife(baseLife - 5);
@@ -224,6 +250,7 @@ void Game::update()
                     enemy->getPositionX(),
                     enemy->getPositionY()) < (PLAYER_RADIUS + ENEMY_RADIUS - 2))
             {
+                this->playSample(this->hitSample[0], true);
                 enemy->setUsed(false);
                 int playerLife = this->player->getLife();
                 this->player->setLife(playerLife - 5);
@@ -243,6 +270,7 @@ void Game::update()
                     drop->getPositionX() + DROP_WIDTH,
                     drop->getPositionY() + DROP_HEIGHT))
             {
+                this->playSample(this->powerUpSample, true);
                 drop->setUsed(false);
                 int points = drop->getPoints();
 
@@ -301,13 +329,27 @@ void Game::handleEvents()
             key[i] &= KEY_SEEN;
 
         if (this->frames / 60 >= 300)
+        {
+            if (!this->isGameFinished)
+            {
+                al_destroy_audio_stream(this->music);
+                this->playSample(this->gameFinishedSample, true);
+            }
             this->isGameFinished = true;
+        }
 
         if (!this->isGameOver && !this->isGamePaused && !this->isGameFinished)
             this->update();
 
         if (this->player->getLife() <= 0 || this->base->getLife() <= 0)
+        {
+            if (!this->isGameOver)
+            {
+                al_destroy_audio_stream(this->music);
+                this->playSample(this->gameOverSample, true);
+            }
             this->isGameOver = true;
+        }
 
         if (this->pauseDelay > 0)
             this->pauseDelay--;
@@ -410,7 +452,15 @@ void Game::deinit()
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
-    al_destroy_audio_stream(this->music);
+    if (this->music)
+        al_destroy_audio_stream(this->music);
+    al_destroy_sample(this->shotSample);
+    al_destroy_sample(this->powerUpSample);
+    al_destroy_sample(this->hitSample[0]);
+    al_destroy_sample(this->hitSample[1]);
+    al_destroy_sample(this->hitSample[2]);
+    al_destroy_sample(this->gameOverSample);
+    al_destroy_sample(this->gameFinishedSample);
 }
 
 // Aux
@@ -457,9 +507,6 @@ void Game::handlePlayerShot()
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    // Shot *currentShot;
-    // float destinationX = state.x, destinationY = state.y;
-
     this->addShot(true, this->player->getPositionX(), this->player->getPositionY(), state.x, state.y);
     this->player->shot();
 }
@@ -467,6 +514,8 @@ void Game::handlePlayerShot()
 void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy)
 {
     Shot *shot;
+
+    this->playSample(this->shotSample, fromPlayer);
 
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
@@ -484,6 +533,17 @@ void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinatio
             break;
         }
     }
+}
+
+void Game::playSample(ALLEGRO_SAMPLE *sample, bool louder)
+{
+    al_play_sample(
+        sample,
+        louder ? 0.5 : 0.2,
+        0,
+        louder ? 1.5 : 2.2,
+        ALLEGRO_PLAYMODE_ONCE,
+        NULL);
 }
 
 string Game::showTime()

@@ -35,4 +35,9 @@ g++ -I ./include .\src\main.cpp .\src\game.cpp .\src\model\shot.cpp .\src\model\
 
 #### Créditos
 
-Créditos da música: https://opengameart.org/content/grey-sector-8-bit
+Música: https://opengameart.org/content/grey-sector-8-bit
+Sound Effects:
+
+- https://opengameart.org/content/50-cc0-retro-synth-sfx (Hits e Drops)
+- https://opengameart.org/content/game-over-soundold-school (Game Over)
+- https://opengameart.org/content/8-bit-sound-effects-library (Game Win/Finished)

@@ -53,7 +53,11 @@ private:
     ALLEGRO_TIMER *timer;
     ALLEGRO_FONT *font;
     ALLEGRO_AUDIO_STREAM *music;
-    ALLEGRO_SAMPLE *sample;
+    ALLEGRO_SAMPLE *shotSample;
+    ALLEGRO_SAMPLE *hitSample[3];
+    ALLEGRO_SAMPLE *powerUpSample;
+    ALLEGRO_SAMPLE *gameOverSample;
+    ALLEGRO_SAMPLE *gameFinishedSample;
 
     Player *player;
     Base *base;
@@ -71,6 +75,7 @@ private:
     void handlePlayerShot();
 
     void addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy = nullptr);
+    void playSample(ALLEGRO_SAMPLE *sample, bool louder = false);
     string showTime();
     bool shots_collide(bool fromPlayer, int x, int y, int w, int h);
     bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2);
