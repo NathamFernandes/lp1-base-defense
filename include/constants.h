@@ -24,4 +24,6 @@ constexpr int DROP_WIDTH = 20;
 constexpr int DROP_HEIGHT = 20;
 constexpr int DROP_LIFETIME = 900;
 
+constexpr int GAME_FINISH_TIME = 300;
+
 #endif // CONSTANTS_H

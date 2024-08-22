@@ -315,7 +315,11 @@ void Game::handleEvents()
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
-        if (key[ALLEGRO_KEY_ESCAPE] && this->pauseDelay == 0)
+        if (key[ALLEGRO_KEY_ESCAPE] && this->isGameOver)
+        {
+            this->restartGame();
+        }
+        else if (key[ALLEGRO_KEY_ESCAPE] && this->pauseDelay == 0 && !this->isGameFinished)
         {
             this->isGamePaused = !this->isGamePaused;
             this->pauseDelay = 10;
@@ -328,7 +332,7 @@ void Game::handleEvents()
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        if (this->frames / 60 >= 300)
+        if (this->frames / 60 >= GAME_FINISH_TIME)
         {
             if (!this->isGameFinished)
             {
@@ -406,9 +410,15 @@ void Game::render()
             al_draw_text(
                 this->font,
                 al_map_rgb(0, 0, 0),
-                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) - 10,
                 ALLEGRO_ALIGN_CENTRE,
                 "GAME OVER!");
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) + 10,
+                ALLEGRO_ALIGN_CENTRE,
+                "APERTE ESC PARA RECOMEÇAR");
         }
         else if (this->isGamePaused)
         {
@@ -631,4 +641,34 @@ void Game::addDrop(int positionX, int positionY)
 int Game::pointsDistance(int x1, int y1, int x2, int y2)
 {
     return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}
+
+void Game::restartGame()
+{
+    Shot *shot;
+    Enemy *enemy;
+    Drop *drop;
+
+    this->music = al_load_audio_stream("./src/assets/audio/music.opus", 4, 1024);
+
+    al_set_audio_stream_playmode(this->music, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_audio_stream_to_mixer(this->music, al_get_default_mixer());
+
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
+    {
+        enemy = this->enemies[i];
+        shot = this->shots[i];
+        drop = this->drops[i];
+
+        enemy->setUsed(false);
+        shot->setUsed(false);
+        drop->setUsed(false);
+    }
+
+    this->player->reset();
+    this->base->reset();
+
+    this->enemiesKilled = 0;
+    this->frames = 0;
+    this->isGameOver = false;
 }

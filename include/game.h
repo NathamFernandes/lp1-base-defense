@@ -82,6 +82,8 @@ private:
     void addDrop(int positionX, int positionY);
     bool collectDrop(int x, int y, int w, int h);
 
+    void restartGame();
+
     int pointsDistance(int x1, int y1, int x2, int y2);
 };
 
