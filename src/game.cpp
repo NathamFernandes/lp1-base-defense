@@ -240,7 +240,7 @@ void Game::update()
                 this->playSample(this->hitSample[2], false);
                 enemy->setUsed(false);
                 int baseLife = this->base->getLife();
-                this->base->setLife(baseLife - 5);
+                this->base->setLife(baseLife >= 5 ? baseLife - 5 : 0);
             }
 
             // Colisão dos inimigos com o player
@@ -253,7 +253,7 @@ void Game::update()
                 this->playSample(this->hitSample[0], true);
                 enemy->setUsed(false);
                 int playerLife = this->player->getLife();
-                this->player->setLife(playerLife - 5);
+                this->player->setLife(playerLife >= 5 ? playerLife - 5 : 0);
             }
         }
 
