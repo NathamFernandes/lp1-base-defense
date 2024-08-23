@@ -7,7 +7,7 @@ BIN_DIR = bin
 
 CC = g++
 CFLAGS = -I ./$(INCLUDE_DIR) -pedantic -Wall -Wextra -ansi -std=c++11
-ALLEGRO_FLAGS = -lallegro -lallegro_font -lallegro_image -lallegro_primitives
+ALLEGRO_FLAGS = -lallegro -lallegro_font -lallegro_image -lallegro_primitives -lallegro_audio -lallegro_acodec
 
 EXE = $(BIN_DIR)/$(NAME)
 

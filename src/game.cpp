@@ -211,9 +211,9 @@ void Game::update()
 
         if (enemy->isUsed())
         {
-            enemy->update(
-                this->player->getPositionX(),
-                this->player->getPositionY());
+            enemy->setDestionationX(this->player->getPositionX());
+            enemy->setDestionationY(this->player->getPositionY());
+            enemy->update();
 
             if (shots_collide(false, enemy->getPositionX(), enemy->getPositionY(), 11, 11))
             {

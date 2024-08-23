@@ -1,7 +1,5 @@
 #include "enemy.h"
 
-#include <iostream>
-
 using namespace std;
 
 Enemy::Enemy()
@@ -12,24 +10,32 @@ Enemy::Enemy()
     this->shotDelay = 100;
 }
 
-bool Enemy::isUsed()
+void Enemy::render()
 {
-    return this->used;
+    if (!this->isUsed())
+        return;
+
+    al_draw_filled_circle(
+        this->x, this->y,
+        ENEMY_RADIUS,
+        al_map_rgb(255, 0, 0));
 }
 
-void Enemy::setUsed(bool used)
+void Enemy::update()
 {
-    this->used = used;
-}
+    this->updatePosition(this->destinationX, this->destinationY);
 
-float Enemy::getVelocity()
-{
-    return this->velocity;
-}
+    if (this->life <= 0)
+    {
+        this->setUsed(false);
+        return;
+    }
 
-void Enemy::setVelocity(float velocity)
-{
-    this->velocity = velocity;
+    this->x += this->dx;
+    this->y += this->dy;
+
+    if (this->shotDelay > 0)
+        this->shotDelay--;
 }
 
 void Enemy::defineRandomPosition()
@@ -59,21 +65,10 @@ void Enemy::defineRandomPosition()
     }
 }
 
-void Enemy::updatePosition(int playerPositionX, int playerPositionY)
+void Enemy::updatePosition(float destinationX, float destinationY)
 {
-    // if (
-    //     this->getPositionX() + 30 >= playerPositionX &&
-    //     this->getPositionX() - 30 <= playerPositionX &&
-    //     this->getPositionY() + 30 >= playerPositionY &&
-    //     this->getPositionY() - 30 <= playerPositionY)
-    // {
-    //     this->dx = 0;
-    //     this->dy = 0;
-    //     return;
-    // }
-
-    int percursoX = playerPositionX - this->x;
-    int percursoY = playerPositionY - this->y;
+    int percursoX = destinationX - this->x;
+    int percursoY = destinationY - this->y;
 
     float hypot = sqrt(pow(percursoX, 2) + pow(percursoY, 2));
 
@@ -84,6 +79,26 @@ void Enemy::updatePosition(int playerPositionX, int playerPositionY)
 
     this->dx = xVelocity;
     this->dy = yVelocity;
+}
+
+bool Enemy::isUsed()
+{
+    return this->used;
+}
+
+void Enemy::setUsed(bool used)
+{
+    this->used = used;
+}
+
+float Enemy::getVelocity()
+{
+    return this->velocity;
+}
+
+void Enemy::setVelocity(float velocity)
+{
+    this->velocity = velocity;
 }
 
 int Enemy::getPositionX()
@@ -106,36 +121,6 @@ void Enemy::setPositionY(int y)
     this->y = y;
 }
 
-void Enemy::render()
-{
-    if (!this->isUsed())
-        return;
-
-    al_draw_filled_circle(
-        this->x, this->y,
-        ENEMY_RADIUS,
-        al_map_rgb(255, 0, 0));
-}
-
-void Enemy::update(int playerPositionX, int playerPositionY)
-{
-    this->updatePosition(playerPositionX, playerPositionY);
-
-    if (this->life <= 0)
-    {
-        this->setUsed(false);
-        return;
-    }
-
-    // TODO: Adicionar lógica de colisão com os tiros do herói
-
-    this->x += this->dx;
-    this->y += this->dy;
-
-    if (this->shotDelay > 0)
-        this->shotDelay--;
-}
-
 short Enemy::getShotDelay()
 {
     return this->shotDelay;
@@ -144,4 +129,24 @@ short Enemy::getShotDelay()
 void Enemy::setShotDelay(short shotDelay)
 {
     this->shotDelay = shotDelay;
+}
+
+float Enemy::getDestinationX()
+{
+    return this->destinationX;
+}
+
+void Enemy::setDestionationX(float destinationX)
+{
+    this->destinationX = destinationX;
+}
+
+float Enemy::getDestionationY()
+{
+    return this->destinationY;
+}
+
+void Enemy::setDestionationY(float destinationY)
+{
+    this->destinationY = destinationY;
 }
