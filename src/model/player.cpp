@@ -36,40 +36,42 @@ void Player::update()
 }
 void Player::render()
 {
-    ALLEGRO_BITMAP* sprite = al_load_bitmap("./jogador.png");
+    ALLEGRO_BITMAP *sprite = al_load_bitmap("./src/assets/images/jogador.png");
 
-    if (sprite) {
+    if (sprite)
+    {
         int largura_sprite = al_get_bitmap_width(sprite);
         int altura_total = al_get_bitmap_height(sprite);
-        int altura_frame = altura_total / 3;  
+        int altura_frame = altura_total / 3;
 
-        static int frame_atual = 0;  
-        static double ultimo_tempo = 0.0;  
-        double tempo_atual = al_get_time();  
+        static int frame_atual = 0;
+        static double ultimo_tempo = 0.0;
+        double tempo_atual = al_get_time();
 
-        if (tempo_atual - ultimo_tempo >= 0.6) {
-            frame_atual = (frame_atual + 1) % 3;  
-            ultimo_tempo = tempo_atual;  
+        if (tempo_atual - ultimo_tempo >= 0.6)
+        {
+            frame_atual = (frame_atual + 1) % 3;
+            ultimo_tempo = tempo_atual;
         }
 
         int posicao_y = frame_atual * altura_frame;
 
-        // Cria um sub-bitmap 
-        ALLEGRO_BITMAP* frame_cortado = al_create_sub_bitmap(sprite, 0, posicao_y, largura_sprite, altura_frame);
+        // Cria um sub-bitmap
+        ALLEGRO_BITMAP *frame_cortado = al_create_sub_bitmap(sprite, 0, posicao_y, largura_sprite, altura_frame);
 
-        if (frame_cortado) {
-            // Calcula o ângulo 
+        if (frame_cortado)
+        {
+            // Calcula o ângulo
             float angulo = atan2(this->y - destinationY, this->x - destinationX) + ALLEGRO_PI;
 
-            // Desenha o frame 
+            // Desenha o frame
             al_draw_rotated_bitmap(
-                frame_cortado,         
-                largura_sprite / 2,    
-                altura_frame / 2,      
-                this->x, this->y,      
-                angulo,                
-                0                      
-            );
+                frame_cortado,
+                largura_sprite / 2,
+                altura_frame / 2,
+                this->x, this->y,
+                angulo,
+                0);
 
             al_destroy_bitmap(frame_cortado);
         }
@@ -77,10 +79,6 @@ void Player::render()
         al_destroy_bitmap(sprite);
     }
 }
-
-
-
-
 
 // Mecânica
 
