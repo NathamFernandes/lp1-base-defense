@@ -22,7 +22,7 @@ class Enemy
 public:
     Enemy();
     void render();
-    void update(int playerPositionX, int playerPositionY);
+    void update();
 
     bool isUsed();
     void setUsed(bool used);
@@ -36,8 +36,14 @@ public:
     float getVelocity();
     void setVelocity(float velocity);
 
+    float getDestinationX();
+    void setDestionationX(float destinationX);
+
+    float getDestionationY();
+    void setDestionationY(float destinationY);
+
     void defineRandomPosition();
-    void updatePosition(int playerPositionX, int playerPositionY);
+    void updatePosition(float destinationX, float destinationY);
 
     short getShotDelay();
     void setShotDelay(short shotDelay);
@@ -45,6 +51,7 @@ public:
 private:
     float x, y;
     float dx, dy;
+    float destinationX, destinationY;
     int life;
     float velocity;
     bool used;
