@@ -2,6 +2,12 @@
 
 LP1 Base Defense é um jogo implementado utilizando a linguagem de programação C++ e a biblioteca [Allegro](https://liballeg.org/), como projeto final da disciplina **IMD0030 - LINGUAGEM DE PROGRAMAÇÃO I** ministrada pelo professor Isaac Franco.
 
+Componentes:
+
+- Arthur Emanuel Souza Cassiano da Costa (https://github.com/arthurcostaa)
+- Erivaldo Oliveira dos Reis
+- Natham Fernandes Raquel (https://github.com/NathamFernandes)
+
 ## Pré-requisitos
 
 Para executar esse jogo é necessário instalar a biblioteca
@@ -47,18 +53,18 @@ g++ -I ./include .\src\main.cpp .\src\game.cpp .\src\model\shot.cpp .\src\model\
 
 Os recursos implementados no jogo consistem em:
 
-* **Movimentação do jogador**: a movimentação do jogador foi feita utilizando o botão direito do mouse. Portanto, para levá-lo até um local destino basta clicar no local desejado e ele se moverá até lá.
-* **Vida do jogador**: o jogador possui uma vida limitada a 100 pontos, que diminui quando ele é atingido por um tiro disparado por um inimigo, tirando-lhe 1 ponto de vida, ou quando o inimigo colide com o jogador, tirando-lhe 5 pontos de vida. A vida do jogador pode ser regenerada ao coletar os bônus deixados pelos inimigos morte e quando a sua vida for 0, acontece o *game over*.
-* **Base**: a base fica no centro da tela e deve ser protegida pela jogador. Assim como o jogador ela também possui 100 pontos de vida, que diminuem quando ela é atingida por disparos dos inimigos ou quando um inimigo colide com ela. Ao longo do jogo, a cor da base muda, indicando o nível de dano que ela possui. Quando a vida da base chega a 0, ocorre o *game over*.
-* **Inimigos**: a todo instante surgem inimigos que aparecem de regiões aleatórias nas bordas da tela. Eles sempre estarão perseguindo e atirando no jogador, tentando destruí-lo. Quando um inimigo atinge o jogador ou a base, ele automaticamente desaparece e desconta uma quantidade de vida maior do jogador ou da base.
-* **Tiros**: tanto o jogador quanto o inimigo podem atirar, o jogador por sua vez tem uma quantidade limitada de tiros, enquanto que o inimigo não, porém esses tiros ocorrem de acordo com um intervalo pré-determinado. Ao longo do jogo, o jogador pode coletar os bônus que aparecem ao matar um inimigo e dessa forma será possível aumentar o seu estoque de tiro de forma ilimitada. Para que o jogador possa atirar basta apertar na tecla Q que o tiro seguirá a direção do ponteiro do mouse.
-* **Bônus**: sempre que o jogador liquida um inimigo será deixado pelo inimigo um bônus, que ao ser coletado pelo jogador pode aumentar o seu estoque de munição, o nível de vida do próprio jogador ou a vida da base. O valor do bônus é aleatório e após um determinado período de tempo ele desaparece.
-* **Fim de jogo**: o jogo possui um tempo de duração de 5 minutos e se o jogador sobreviver todo esse tempo ele será declarado vencedor.
-* **Game over**: caso os níveis de vida da base ou do jogador cheguem a 0, então ocorre o game over.
-* **Pause**: a pausa do jogo é feita apertando a tecla ESC e para voltar ao jogo basta apertar essa tecla novamente.
-* **Efeitos sonoros e música**: o jogo possui diversos efeitos sonoros, como o de disparo de um tiro, coleta de bônus, quando o jogador ou o inimigo são atingidos por um tiro, quando a base ou o jogador colidem com um inimigo e também para o *game over* e fim de jogo. Além disso, também há uma música de fundo durante todo o jogo.
-* **Sprites**: tanto o jogador quanto os inimigos possuem sprites, que se diferenciam pelas suas cores.
-* **Score board**: o jogo possui um *score board* que indica o tempo de jogo, a vida da base e do jogador, o número de inimigos que o jogador matou e o estoque de munição.
+- **Movimentação do jogador**: a movimentação do jogador foi feita utilizando o botão direito do mouse. Portanto, para levá-lo até um local destino basta clicar no local desejado e ele se moverá até lá.
+- **Vida do jogador**: o jogador possui uma vida limitada a 100 pontos, que diminui quando ele é atingido por um tiro disparado por um inimigo, tirando-lhe 1 ponto de vida, ou quando o inimigo colide com o jogador, tirando-lhe 5 pontos de vida. A vida do jogador pode ser regenerada ao coletar os bônus deixados pelos inimigos morte e quando a sua vida for 0, acontece o _game over_.
+- **Base**: a base fica no centro da tela e deve ser protegida pela jogador. Assim como o jogador ela também possui 100 pontos de vida, que diminuem quando ela é atingida por disparos dos inimigos ou quando um inimigo colide com ela. Ao longo do jogo, a cor da base muda, indicando o nível de dano que ela possui. Quando a vida da base chega a 0, ocorre o _game over_.
+- **Inimigos**: a todo instante surgem inimigos que aparecem de regiões aleatórias nas bordas da tela. Eles sempre estarão perseguindo e atirando no jogador, tentando destruí-lo. Quando um inimigo atinge o jogador ou a base, ele automaticamente desaparece e desconta uma quantidade de vida maior do jogador ou da base.
+- **Tiros**: tanto o jogador quanto o inimigo podem atirar, o jogador por sua vez tem uma quantidade limitada de tiros, enquanto que o inimigo não, porém esses tiros ocorrem de acordo com um intervalo pré-determinado. Ao longo do jogo, o jogador pode coletar os bônus que aparecem ao matar um inimigo e dessa forma será possível aumentar o seu estoque de tiro de forma ilimitada. Para que o jogador possa atirar basta apertar na tecla Q que o tiro seguirá a direção do ponteiro do mouse.
+- **Bônus**: sempre que o jogador liquida um inimigo será deixado pelo inimigo um bônus, que ao ser coletado pelo jogador pode aumentar o seu estoque de munição, o nível de vida do próprio jogador ou a vida da base. O valor do bônus é aleatório e após um determinado período de tempo ele desaparece.
+- **Fim de jogo**: o jogo possui um tempo de duração de 5 minutos e se o jogador sobreviver todo esse tempo ele será declarado vencedor.
+- **Game over**: caso os níveis de vida da base ou do jogador cheguem a 0, então ocorre o game over.
+- **Pause**: a pausa do jogo é feita apertando a tecla ESC e para voltar ao jogo basta apertar essa tecla novamente.
+- **Efeitos sonoros e música**: o jogo possui diversos efeitos sonoros, como o de disparo de um tiro, coleta de bônus, quando o jogador ou o inimigo são atingidos por um tiro, quando a base ou o jogador colidem com um inimigo e também para o _game over_ e fim de jogo. Além disso, também há uma música de fundo durante todo o jogo.
+- **Sprites**: tanto o jogador quanto os inimigos possuem sprites, que se diferenciam pelas suas cores.
+- **Score board**: o jogo possui um _score board_ que indica o tempo de jogo, a vida da base e do jogador, o número de inimigos que o jogador matou e o estoque de munição.
 
 ## Recursos não implementados
 
@@ -67,10 +73,11 @@ No jogo não foi implementado os sprites para os bônus deixados pelos inimigos 
 ## Créditos
 
 ### Música
+
 https://opengameart.org/content/grey-sector-8-bit
 
-
 ### Sound Effects
+
 - https://opengameart.org/content/50-cc0-retro-synth-sfx (Hits e Drops)
 - https://opengameart.org/content/game-over-soundold-school (Game Over)
 - https://opengameart.org/content/8-bit-sound-effects-library (Game Win/Finished)
