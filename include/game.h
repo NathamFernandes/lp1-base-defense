@@ -60,7 +60,7 @@ private:
     vector<Enemy *> enemies;
     vector<Shot *> shots;
     vector<Drop *> drops;
-    Drop *drop;
+    // Drop *drop;
 
     unsigned char key[ALLEGRO_KEY_MAX];
 
