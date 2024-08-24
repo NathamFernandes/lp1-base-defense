@@ -36,6 +36,20 @@ void Base::render()
         BASE_THICKNESS);
 }
 
+void Base::reset()
+{
+    this->width = BASE_WIDTH;
+    this->height = BASE_HEIGHT;
+    this->life = BASE_LIFE;
+
+    this->x1 = (DISPLAY_WIDTH - this->width) / 2;
+    this->y1 = (DISPLAY_HEIGHT - this->height) / 2;
+    this->x2 = (DISPLAY_WIDTH + this->width) / 2;
+    this->y2 = (DISPLAY_HEIGHT + this->height) / 2;
+
+    this->setRGBColor(0, 255, 0);
+}
+
 void Base::setRGBColor(int r, int g, int b)
 {
     this->red = r;

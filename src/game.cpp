@@ -1,8 +1,5 @@
 #include "game.h"
 
-#include <iostream>
-#include <cmath>
-
 using namespace std;
 
 Game::Game()
@@ -16,6 +13,10 @@ Game::Game()
     this->frames = 0;
     this->quota = 0;
     this->enemiesKilled = 0;
+    this->isGameOver = false;
+    this->isGamePaused = false;
+    this->isGameFinished = false;
+    this->pauseDelay = 10;
     /** Lógica botão esquerdo - feature opcional - não tá funcionando */
     // this->isLeftButtonPressed = false;
 
@@ -79,6 +80,7 @@ bool Game::init()
     // Antialiasing
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
+    // al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
@@ -105,6 +107,45 @@ bool Game::init()
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
 
+    if (!must_init(al_install_audio(), "audio"))
+        return false;
+    if (!must_init(al_init_acodec_addon(), "audio codecs"))
+        return false;
+    if (!must_init(al_reserve_samples(16), "reserve samples"))
+        return false;
+
+    this->shotSample = al_load_sample("./src/assets/sound_effects/shot.ogg");
+    if (!must_init(this->shotSample, "shot sample"))
+        return false;
+
+    this->powerUpSample = al_load_sample("./src/assets/sound_effects/power_up.ogg");
+    if (!must_init(this->powerUpSample, "power up sample"))
+        return false;
+
+    this->hitSample[0] = al_load_sample("./src/assets/sound_effects/player_hit.ogg");
+    if (!must_init(this->hitSample[0], "player hit sample"))
+        return false;
+    this->hitSample[1] = al_load_sample("./src/assets/sound_effects/enemy_hit.ogg");
+    if (!must_init(this->hitSample[1], "enemy hit sample"))
+        return false;
+    this->hitSample[2] = al_load_sample("./src/assets/sound_effects/base_hit.ogg");
+    if (!must_init(this->hitSample[2], "base hit sample"))
+        return false;
+
+    this->gameOverSample = al_load_sample("./src/assets/sound_effects/game_over.ogg");
+    if (!must_init(this->gameOverSample, "game over sample"))
+        return false;
+
+    this->gameFinishedSample = al_load_sample("./src/assets/sound_effects/game_finished.ogg");
+    if (!must_init(this->gameFinishedSample, "game finished sample"))
+        return false;
+
+    this->music = al_load_audio_stream("./src/assets/audio/music.opus", 4, 1024);
+    if (!must_init(this->music, "music"))
+        return false;
+
+    al_set_audio_stream_playmode(this->music, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_audio_stream_to_mixer(this->music, al_get_default_mixer());
     al_register_event_source(
         this->queue, al_get_keyboard_event_source());
     al_register_event_source(
@@ -131,10 +172,12 @@ void Game::update()
 {
     Enemy *enemy;
     Shot *shot;
+    Drop *drop;
 
     this->player->update();
     if (shots_collide(true, this->player->getPositionX(), this->player->getPositionY(), 10, 10))
     {
+        this->playSample(this->hitSample[0], true);
         short life = this->player->getLife();
         this->player->setLife(life - 1);
     }
@@ -142,6 +185,7 @@ void Game::update()
     this->base->update();
     if (shots_collide(true, this->base->getPositionX1(), this->base->getPositionY1(), this->base->getPositionX2() - this->base->getPositionX1(), this->base->getPositionY2() - this->base->getPositionY1()))
     {
+        this->playSample(this->hitSample[2]);
         short life = this->base->getLife();
         this->base->setLife(life - 1);
     }
@@ -154,6 +198,7 @@ void Game::update()
     {
         enemy = this->enemies[i];
         shot = this->shots[i];
+        drop = this->drops[i];
 
         if (!enemy->isUsed() && this->quota > 0)
         {
@@ -172,13 +217,89 @@ void Game::update()
 
             if (shots_collide(false, enemy->getPositionX(), enemy->getPositionY(), 11, 11))
             {
+                this->playSample(this->hitSample[1], false);
                 enemy->setUsed(false);
                 this->enemiesKilled++;
-                // drop->setUsed(true);
+                this->addDrop(enemy->getPositionX(), enemy->getPositionY());
             }
 
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
+
+            // Colisão do inimigo com a base
+            if (this->collide(
+                    this->base->getPositionX1(),
+                    this->base->getPositionY1(),
+                    this->base->getPositionX2() + BASE_THICKNESS,
+                    this->base->getPositionY2() + BASE_THICKNESS,
+                    enemy->getPositionX(),
+                    enemy->getPositionY(),
+                    enemy->getPositionX() + ENEMY_RADIUS,
+                    enemy->getPositionY() + ENEMY_RADIUS))
+            {
+                this->playSample(this->hitSample[2], false);
+                enemy->setUsed(false);
+                int baseLife = this->base->getLife();
+                this->base->setLife(baseLife >= 5 ? baseLife - 5 : 0);
+            }
+
+            // Colisão dos inimigos com o player
+            if (pointsDistance(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    enemy->getPositionX(),
+                    enemy->getPositionY()) < (PLAYER_RADIUS + ENEMY_RADIUS - 2))
+            {
+                this->playSample(this->hitSample[0], true);
+                enemy->setUsed(false);
+                int playerLife = this->player->getLife();
+                this->player->setLife(playerLife >= 5 ? playerLife - 5 : 0);
+            }
+        }
+
+        if (drop->isUsed())
+        {
+            drop->update();
+            if (this->collide(
+                    this->player->getPositionX(),
+                    this->player->getPositionY(),
+                    this->player->getPositionX() + 10,
+                    this->player->getPositionY() + 10,
+                    drop->getPositionX(),
+                    drop->getPositionY(),
+                    drop->getPositionX() + DROP_WIDTH,
+                    drop->getPositionY() + DROP_HEIGHT))
+            {
+                this->playSample(this->powerUpSample, true);
+                drop->setUsed(false);
+                int points = drop->getPoints();
+
+                switch (drop->getDropType())
+                {
+                case BASE_LIFE_DROP:
+                {
+                    int baseLife = this->base->getLife();
+                    int newBaseLife = baseLife + points;
+                    this->base->setLife(newBaseLife > BASE_LIFE ? BASE_LIFE : newBaseLife);
+                    break;
+                }
+                case PLAYER_LIFE_DROP:
+                {
+                    int playerLife = this->player->getLife();
+                    int newPlayerLife = playerLife + points;
+                    this->player->setLife(newPlayerLife > PLAYER_LIFE ? PLAYER_LIFE : newPlayerLife);
+                    break;
+                }
+                case AMMUNITION_DROP:
+                {
+                    this->player->setAmmunition(this->player->getAmmunition() + points);
+                    break;
+                }
+                case LAST_DROP:
+                default:
+                    break;
+                }
+            }
         }
 
         if (shot->isUsed())
@@ -194,23 +315,51 @@ void Game::handleEvents()
     switch (event.type)
     {
     case ALLEGRO_EVENT_TIMER:
-        if (key[ALLEGRO_KEY_ESCAPE])
+        if (key[ALLEGRO_KEY_ESCAPE] && this->isGameOver)
         {
-            this->running = false;
-            // TODO: feature opcional de pause
-            // this->pause = true;
+            this->restartGame();
         }
-        if (key[ALLEGRO_KEY_Q])
+        else if (key[ALLEGRO_KEY_ESCAPE] && this->pauseDelay == 0 && !this->isGameFinished)
+        {
+            this->isGamePaused = !this->isGamePaused;
+            this->pauseDelay = 10;
+        }
+
+        if (key[ALLEGRO_KEY_Q] && !this->isGamePaused && !this->isGameOver && !this->isGameFinished)
             this->handlePlayerShot();
 
         // Faz com que a tecla não fique "apertada" infinitamente
         for (int i = 0; i < ALLEGRO_KEY_MAX; i++)
             key[i] &= KEY_SEEN;
 
-        this->update();
+        if (this->frames / 60 >= GAME_FINISH_TIME)
+        {
+            if (!this->isGameFinished)
+            {
+                al_destroy_audio_stream(this->music);
+                this->playSample(this->gameFinishedSample, true);
+            }
+            this->isGameFinished = true;
+        }
 
+        if (!this->isGameOver && !this->isGamePaused && !this->isGameFinished)
+            this->update();
+
+        if (this->player->getLife() <= 0 || this->base->getLife() <= 0)
+        {
+            if (!this->isGameOver)
+            {
+                al_destroy_audio_stream(this->music);
+                this->playSample(this->gameOverSample, true);
+            }
+            this->isGameOver = true;
+        }
+
+        if (this->pauseDelay > 0)
+            this->pauseDelay--;
         this->redraw = true;
-        this->frames++;
+        if (!this->isGamePaused && !this->isGamePaused && !this->isGameFinished)
+            this->frames++;
         break;
     case ALLEGRO_EVENT_MOUSE_BUTTON_DOWN:
         switch (event.mouse.button)
@@ -246,15 +395,49 @@ void Game::render()
     if (this->redraw && al_event_queue_is_empty(this->queue))
     {
         al_clear_to_color(al_map_rgb(255, 255, 255));
-        al_draw_text(
-            this->font,
-            al_map_rgb(0, 0, 0),
-            DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
-            ALLEGRO_ALIGN_CENTRE,
-            "HELLO, WORLD!");
+
+        for (auto drop : drops)
+        {
+            drop->render(this->font);
+        }
+
         this->base->render();
         this->player->render();
         this->renderScoreboard();
+
+        if (this->isGameOver)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) - 10,
+                ALLEGRO_ALIGN_CENTRE,
+                "GAME OVER!");
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) + 10,
+                ALLEGRO_ALIGN_CENTRE,
+                "APERTE ESC PARA RECOMEÇAR");
+        }
+        else if (this->isGamePaused)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                ALLEGRO_ALIGN_CENTRE,
+                "JOGO PAUSADO!");
+        }
+        else if (this->isGameFinished)
+        {
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                ALLEGRO_ALIGN_CENTRE,
+                "PARABÉNS, VOCÊ GANHOU!");
+        }
 
         // Pode ser substituido com um for tradicional
         for (auto enemy : enemies)
@@ -279,6 +462,15 @@ void Game::deinit()
     al_destroy_display(this->display);
     al_destroy_timer(this->timer);
     al_destroy_event_queue(this->queue);
+    if (this->music)
+        al_destroy_audio_stream(this->music);
+    al_destroy_sample(this->shotSample);
+    al_destroy_sample(this->powerUpSample);
+    al_destroy_sample(this->hitSample[0]);
+    al_destroy_sample(this->hitSample[1]);
+    al_destroy_sample(this->hitSample[2]);
+    al_destroy_sample(this->gameOverSample);
+    al_destroy_sample(this->gameFinishedSample);
 }
 
 // Aux
@@ -325,9 +517,6 @@ void Game::handlePlayerShot()
     ALLEGRO_MOUSE_STATE state;
     al_get_mouse_state(&state);
 
-    Shot *currentShot;
-    float destinationX = state.x, destinationY = state.y;
-
     this->addShot(true, this->player->getPositionX(), this->player->getPositionY(), state.x, state.y);
     this->player->shot();
 }
@@ -335,6 +524,8 @@ void Game::handlePlayerShot()
 void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy)
 {
     Shot *shot;
+
+    this->playSample(this->shotSample, fromPlayer);
 
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
@@ -354,10 +545,22 @@ void Game::addShot(bool fromPlayer, int positionX, int positionY, int destinatio
     }
 }
 
+void Game::playSample(ALLEGRO_SAMPLE *sample, bool louder)
+{
+    al_play_sample(
+        sample,
+        louder ? 0.5 : 0.2,
+        0,
+        louder ? 1.5 : 2.2,
+        ALLEGRO_PLAYMODE_ONCE,
+        NULL);
+}
+
 string Game::showTime()
 {
-    int sec = int(al_get_time()) % 60;
-    int min = int(al_get_time()) / 60;
+    int totalTime = this->frames / 60;
+    int sec = totalTime % 60;
+    int min = totalTime / 60;
 
     string secStr = (sec > 9) ? to_string(sec) : ("0" + to_string(sec));
     string minStr = (min > 9) ? to_string(min) : ("0" + to_string(min));
@@ -369,11 +572,11 @@ string Game::showTime()
 
 bool Game::shots_collide(bool fromPlayer, int x, int y, int w, int h)
 {
-    Shot *shot;
+    // Shot *shot;
 
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
-        shot = this->shots[i];
+        // shot = this->shots[i];
         if (!shots[i]->isUsed())
             continue;
 
@@ -416,4 +619,56 @@ bool Game::collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2
         return false;
 
     return true;
+}
+
+void Game::addDrop(int positionX, int positionY)
+{
+    for (auto drop : this->drops)
+    {
+        if (!drop->isUsed())
+        {
+            drop->setDropType((DropType)Random::randint(0, LAST_DROP));
+            drop->setPoints(Random::randint(1, 8));
+            drop->setPositionX(positionX);
+            drop->setPositionY(positionY);
+            drop->setUsed(true);
+            drop->setLifeTime(DROP_LIFETIME);
+            break;
+        }
+    }
+}
+
+int Game::pointsDistance(int x1, int y1, int x2, int y2)
+{
+    return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}
+
+void Game::restartGame()
+{
+    Shot *shot;
+    Enemy *enemy;
+    Drop *drop;
+
+    this->music = al_load_audio_stream("./src/assets/audio/music.opus", 4, 1024);
+
+    al_set_audio_stream_playmode(this->music, ALLEGRO_PLAYMODE_LOOP);
+    al_attach_audio_stream_to_mixer(this->music, al_get_default_mixer());
+
+    for (int i = 0; i < OBJECTS_AMOUNT; i++)
+    {
+        enemy = this->enemies[i];
+        shot = this->shots[i];
+        drop = this->drops[i];
+
+        enemy->setUsed(false);
+        shot->setUsed(false);
+        drop->setUsed(false);
+    }
+
+    this->player->reset();
+    this->base->reset();
+
+    this->enemiesKilled = 0;
+    this->frames = 0;
+    this->isGameOver = false;
 }

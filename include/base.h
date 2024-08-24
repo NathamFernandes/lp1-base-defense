@@ -13,6 +13,7 @@ public:
 
     void update();
     void render();
+    void reset();
 
     // Getters and Setters
 

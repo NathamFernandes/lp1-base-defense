@@ -1,23 +1,20 @@
 #include "player.h"
 
-#include <iostream>
-#include <cmath>
-
 using namespace std;
 
 Player::Player()
 {
     // Valores não definitivos.
-    this->x = 320;
-    this->y = 240;
+    this->x = DISPLAY_WIDTH / 2;
+    this->y = DISPLAY_HEIGHT / 2;
     this->dx = 0;
     this->dy = 0;
     this->life = 100;
     this->ammunition = 100;
     this->shotDelay = 0;
     this->isMoving = false;
-    this->destinationX = 320;
-    this->destinationY = 240;
+    this->destinationX = DISPLAY_WIDTH / 2;
+    this->destinationY = DISPLAY_HEIGHT / 2;
 }
 
 Player::~Player()
@@ -78,6 +75,20 @@ void Player::render()
 
         al_destroy_bitmap(sprite);
     }
+}
+
+void Player::reset()
+{
+    this->x = DISPLAY_WIDTH / 2;
+    this->y = DISPLAY_HEIGHT / 2;
+    this->dx = 0;
+    this->dy = 0;
+    this->life = 100;
+    this->ammunition = 100;
+    this->shotDelay = 0;
+    this->isMoving = false;
+    this->destinationX = DISPLAY_WIDTH / 2;
+    this->destinationY = DISPLAY_HEIGHT / 2;
 }
 
 // Mecânica

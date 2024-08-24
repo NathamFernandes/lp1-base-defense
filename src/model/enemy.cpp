@@ -61,16 +61,16 @@ void Enemy::defineRandomPosition()
 
 void Enemy::updatePosition(int playerPositionX, int playerPositionY)
 {
-    if (
-        this->getPositionX() + 30 >= playerPositionX &&
-        this->getPositionX() - 30 <= playerPositionX &&
-        this->getPositionY() + 30 >= playerPositionY &&
-        this->getPositionY() - 30 <= playerPositionY)
-    {
-        this->dx = 0;
-        this->dy = 0;
-        return;
-    }
+    // if (
+    //     this->getPositionX() + 30 >= playerPositionX &&
+    //     this->getPositionX() - 30 <= playerPositionX &&
+    //     this->getPositionY() + 30 >= playerPositionY &&
+    //     this->getPositionY() - 30 <= playerPositionY)
+    // {
+    //     this->dx = 0;
+    //     this->dy = 0;
+    //     return;
+    // }
 
     int percursoX = playerPositionX - this->x;
     int percursoY = playerPositionY - this->y;
@@ -105,6 +105,7 @@ void Enemy::setPositionY(int y)
 {
     this->y = y;
 }
+
 void Enemy::render()
 {
     if (!this->isUsed())
