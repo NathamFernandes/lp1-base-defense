@@ -9,20 +9,16 @@ Game::Game()
     this->redraw = true;
     this->destinationX = 0;
     this->destinationY = 0;
-    this->objAmount = 20;
     this->frames = 0;
     this->quota = 0;
     this->enemiesKilled = 0;
+    this->pauseDelay = 10;
     this->isGameOver = false;
     this->isGamePaused = false;
     this->isGameFinished = false;
-    this->pauseDelay = 10;
-    /** Lógica botão esquerdo - feature opcional - não tá funcionando */
-    // this->isLeftButtonPressed = false;
 
     this->player = new Player();
     this->base = new Base();
-
     this->enemies.resize(OBJECTS_AMOUNT);
     this->shots.resize(OBJECTS_AMOUNT);
     this->drops.resize(OBJECTS_AMOUNT);
@@ -80,7 +76,6 @@ bool Game::init()
     // Antialiasing
     al_set_new_display_option(ALLEGRO_SAMPLE_BUFFERS, 1, ALLEGRO_SUGGEST);
     al_set_new_display_option(ALLEGRO_SAMPLES, 8, ALLEGRO_SUGGEST);
-    // al_set_new_bitmap_flags(ALLEGRO_MIN_LINEAR | ALLEGRO_MAG_LINEAR);
 
     if (!must_init(al_init_primitives_addon(), "primitives"))
         return false;
@@ -223,6 +218,7 @@ void Game::update()
                 this->addDrop(enemy->getPositionX(), enemy->getPositionY());
             }
 
+            // Atira se estiver sem delay
             if (enemy->getShotDelay() == 0 && enemy->isUsed())
                 this->addShot(false, enemy->getPositionX(), enemy->getPositionY(), this->player->getPositionX(), this->player->getPositionY(), enemy);
 
@@ -425,9 +421,15 @@ void Game::render()
             al_draw_text(
                 this->font,
                 al_map_rgb(0, 0, 0),
-                DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2,
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) - 10,
                 ALLEGRO_ALIGN_CENTRE,
                 "JOGO PAUSADO!");
+            al_draw_text(
+                this->font,
+                al_map_rgb(0, 0, 0),
+                DISPLAY_WIDTH / 2, (DISPLAY_HEIGHT / 2) + 10,
+                ALLEGRO_ALIGN_CENTRE,
+                "APERTE ESC PARA DESPAUSAR");
         }
         else if (this->isGameFinished)
         {
@@ -576,7 +578,6 @@ bool Game::shots_collide(bool fromPlayer, int x, int y, int w, int h)
 
     for (int i = 0; i < OBJECTS_AMOUNT; i++)
     {
-        // shot = this->shots[i];
         if (!shots[i]->isUsed())
             continue;
 
@@ -584,21 +585,10 @@ bool Game::shots_collide(bool fromPlayer, int x, int y, int w, int h)
         if (shots[i]->isFromPlayer() == fromPlayer)
             continue;
 
-        int sw, sh;
-        if (fromPlayer)
-        {
-            sw = 10;
-            sh = 10;
-        }
-        else
-        {
-            sw = 5;
-            sh = 5;
-        }
+        int sw = 10, sh = 10;
 
         if (this->collide(x, y, x + w, y + h, shots[i]->getPositionX(), shots[i]->getPositionY(), shots[i]->getPositionX() + sw, shots[i]->getPositionY() + sh))
         {
-            // fx_add(true, shots[i].x + (sw / 2), shots[i].y + (sh / 2));
             shots[i]->setUsed(false);
             return true;
         }

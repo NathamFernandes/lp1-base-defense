@@ -8,7 +8,6 @@
 #include "constants.h"
 #include "random.h"
 
-// Poderia fazer outros buffs/nerfs, como um freeze na tela, uma diminuição no tempo do jogo, etc...
 enum DropType
 {
     AMMUNITION_DROP = 0,

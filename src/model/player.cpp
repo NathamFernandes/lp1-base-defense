@@ -31,9 +31,12 @@ void Player::update()
     if (this->shotDelay > 0)
         this->shotDelay--;
 }
-void Player::render()
+void Player::render(int stateX, int stateY)
 {
     ALLEGRO_BITMAP *sprite = al_load_bitmap("./src/assets/images/jogador.png");
+
+    ALLEGRO_MOUSE_STATE state;
+    al_get_mouse_state(&state);
 
     if (sprite)
     {
@@ -59,8 +62,8 @@ void Player::render()
         if (frame_cortado)
         {
             // Calcula o ângulo
-            float angulo = atan2(this->y - destinationY, this->x - destinationX) + ALLEGRO_PI;
 
+            float angulo = atan2(this->y - state.y, this->x - state.x) + ALLEGRO_PI;
             // Desenha o frame
             al_draw_rotated_bitmap(
                 frame_cortado,

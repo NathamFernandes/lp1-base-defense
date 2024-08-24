@@ -23,7 +23,7 @@ public:
     ~Player();
 
     void update();
-    void render();
+    void render(int stateX = 0, int stateY = 0);
     void reset();
 
     // Mecânica

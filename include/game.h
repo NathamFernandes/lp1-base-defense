@@ -34,19 +34,15 @@ public:
     void run();
     void deinit();
     void update();
+    void render();
 
 private:
     bool running, redraw;
     long score;
     int destinationX, destinationY;
-    /** Lógica botão esquerdo - feature opcional - não tá funcionando */
-    // bool isLeftButtonPressed;
-    int objAmount; // Parecido com #define SHOTS_N. esboço.
-    int frames;
-    int quota;
-    int enemiesKilled;
+    int frames, quota;
+    int enemiesKilled, pauseDelay;
     bool isGameOver, isGamePaused, isGameFinished;
-    int pauseDelay;
 
     ALLEGRO_DISPLAY *display;
     ALLEGRO_EVENT_QUEUE *queue;
@@ -68,12 +64,11 @@ private:
 
     unsigned char key[ALLEGRO_KEY_MAX];
 
+    // Lógica e mecânica
     bool must_init(bool test, string description);
     void handleEvents();
-    void render();
     void renderScoreboard();
     void handlePlayerShot();
-
     void addShot(bool fromPlayer, int positionX, int positionY, int destinationX, int destinationY, Enemy *enemy = nullptr);
     void playSample(ALLEGRO_SAMPLE *sample, bool louder = false);
     string showTime();
@@ -81,9 +76,7 @@ private:
     bool collide(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2);
     void addDrop(int positionX, int positionY);
     bool collectDrop(int x, int y, int w, int h);
-
     void restartGame();
-
     int pointsDistance(int x1, int y1, int x2, int y2);
 };
 

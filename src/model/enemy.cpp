@@ -39,7 +39,7 @@ void Enemy::render()
 
         if (frame_cortado)
         {
-            float angulo = atan2(this->y, this->x) + ALLEGRO_PI;
+            float angulo = atan2(this->y - this->destinationY, this->x - this->destinationX) + ALLEGRO_PI;
 
             al_draw_rotated_bitmap(
                 frame_cortado,
