@@ -1,13 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <iostream>
-#include <cmath>
-
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_color.h>
-
-#include "constants.h"
+#include <allegro5/allegro_image.h>
 
 class Player
 {
@@ -24,7 +20,6 @@ public:
 
     void update();
     void render();
-    void reset();
 
     // Mecânica
 
