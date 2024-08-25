@@ -8,6 +8,9 @@ Componentes:
 - Erivaldo Oliveira dos Reis
 - Natham Fernandes Raquel (https://github.com/NathamFernandes)
 
+Link para o vídeo:
+[VideoLP1](https://drive.google.com/file/d/1E3oL9l9e9iSxV_EuldjJjMgLf0Fxms4o/view?usp=sharing)
+
 ## Pré-requisitos
 
 Para executar esse jogo é necessário instalar a biblioteca
