@@ -8,8 +8,8 @@ Componentes:
 - Erivaldo Oliveira dos Reis
 - Natham Fernandes Raquel (https://github.com/NathamFernandes)
 
-Link para o vídeo:
-[VideoLP1](https://drive.google.com/file/d/1E3oL9l9e9iSxV_EuldjJjMgLf0Fxms4o/view?usp=sharing)
+Link para o vídeo abaixo:
+[VideoLP1](https://drive.google.com/file/d/1L6u8cbI9IQd00fwh_1d1zEKZ_XOq_Xal/view?usp=sharing)
 
 ## Pré-requisitos
 
